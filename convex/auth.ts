@@ -9,6 +9,10 @@ const CustomPassword = Password<DataModel>({
     return {
       email: params.email as string,
       name: params.name as string,
+      numOwned: 0,
+      numLiked: 0,
+      ownedSets: [],
+      likedSets: [],
     };
   },
 });
