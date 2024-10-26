@@ -5,8 +5,8 @@ import { ConvexClientProvider } from "@/components/auth/ConvexClientProvider";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "Reddit Clone",
-  description: "A reddit clone built with Convex and Next.js",
+  title: "AI Flashcards",
+  description: "A flashcard app built with Convex and Next.js",
 };
 
 export default function RootLayout({
