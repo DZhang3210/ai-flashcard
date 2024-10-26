@@ -19,8 +19,11 @@ export default function Home() {
         <p className="text-gray-500">No credit card required</p>
       </div>
       <div className="h-[300px] grid grid-cols-4 gap-4 w-full max-w-6xl">
-        {["Generate", "Edit", "Test", "Share"].map((item) => (
-          <button className="bg-gray-200 rounded-lg w-full h-full flex flex-col items-center p-4 hover:bg-gray-300 transition">
+        {["Generate", "Edit", "Test", "Share"].map((item, index) => (
+          <button
+            className="bg-gray-200 rounded-lg w-full h-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+            key={index}
+          >
             <p className="text-lg font-bold">{item}</p>
           </button>
         ))}
