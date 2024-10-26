@@ -12,6 +12,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        quizlet: "#8995FF",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
