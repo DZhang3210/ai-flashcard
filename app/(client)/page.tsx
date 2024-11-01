@@ -1,32 +1,38 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center  py-10 space-y-2 w-full min-h-[calc(100vh-80px)] bg-yellow-100">
-      <h1 className="text-4xl font-bold">Study without the hassle</h1>
-      <p className="text-xl text-gray-500 max-w-2xl text-center">
-        AI Words is a platform that allows you to study without the hassle.
-        Create flashcards with AI in seconds.
-      </p>
-      <Button className="bg-green-400 text-black rounded-lg hover:bg-green-500 transition">
-        <div className="flex items-center space-x-2">
-          <p>Get Started</p>
-          <ArrowRight size={20} />
+    <div className="w-full min-h-[calc(100vh-100px)] bg-background1">
+      <div className="flex flex-col items-center py-10 space-y-6 w-full h-full">
+        <div className="flex flex-col items-center space-y-2">
+          <h1 className="text-5xl  md:text-6xl lg:text-7xl xl:text-8xl font-bold px-10 md:px-20 max-w-7xl text-center">
+            <span className="text-font3">Create</span>
+            <span className="text-font1"> Stunning Flashcards</span> in
+            <span className="text-font4"> seconds</span>
+          </h1>
         </div>
-      </Button>
-      <div className="flex items-center space-x-2">
-        <p className="text-gray-500">No credit card required</p>
+        <Button className="bg-black text-black rounded-full hover:bg-font2/70 transition py-5 px-20 lg:py-7 duration-300">
+          <div className="flex items-center justify-between space-x-2 text-xl lg:text-3xl text-white">
+            <Link href={`/user`}>Let&apos;s Go!</Link>
+          </div>
+        </Button>
       </div>
-      <div className="h-[300px] grid grid-cols-4 gap-4 w-full max-w-6xl">
-        {["Generate", "Edit", "Test", "Share"].map((item, index) => (
-          <button
-            className="bg-gray-200 rounded-lg w-full h-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-            key={index}
-          >
-            <p className="text-lg font-bold">{item}</p>
+      <div className="flex items-center justify-center  w-full">
+        <div className=" grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 gap-4 w-full max-w-7xl border-3xl m-4 rounded-3xl">
+          <button className="bg-font1 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font1/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+            <p className="text-3xl font-bold text-white">Generate</p>
           </button>
-        ))}
+          <button className="bg-font2 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font2/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+            <p className="text-3xl text-white font-bold">Edit</p>
+          </button>
+          <button className="bg-font3 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font3/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+            <p className="text-3xl text-white font-bold">Test</p>
+          </button>
+          <button className="bg-font4 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font4/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+            <p className="text-3xl text-white font-bold">Share</p>
+          </button>
+        </div>
       </div>
     </div>
   );

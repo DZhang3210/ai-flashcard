@@ -37,21 +37,21 @@ const UserButton = () => {
           <AvatarFallback>{avatarFallback}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80 bg-black text-white *:p-6">
+      <DropdownMenuContent className="w-80 bg-background1 text-black *:p-6">
         <DropdownMenuItem
-          className="cursor-pointer text-lg flex items-center group hover:bg-white"
+          className="cursor-pointer text-lg flex items-center group "
           asChild
         >
           <div
-            className="flex items-center space-x-4"
-            onClick={() => router.push(`/profile/${data._id}/overview`)}
+            className="flex items-center space-x-4 hover:bg-black/90 transition"
+            onClick={() => router.push(`/user`)}
           >
             <Avatar className="size-[50px] hover:opacity-75 transition">
               <AvatarImage alt={name} src={image} />
               <AvatarFallback>{avatarFallback}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <p className="text-lg font-bold text-gray-100 group-hover:text-black transition">
+              <p className="text-lg font-bold text-black group-hover:text-black transition">
                 {name}
               </p>
               <p className="text-sm text-gray-400">{email}</p>
@@ -60,7 +60,7 @@ const UserButton = () => {
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          className="cursor-pointer text-xl flex items-center"
+          className="cursor-pointer text-xl flex items-center hover:bg-black/90 transition"
           onClick={() => {
             signOut();
           }}

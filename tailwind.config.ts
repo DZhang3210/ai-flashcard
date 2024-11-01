@@ -12,7 +12,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        quizlet: "#8995FF",
+        background1: "#F7F7F8",
+        font1: "#7CB69D",
+        font2: "#7FA9D6",
+        font3: "#E7B48D",
+        font4: "#B5A0D8",
+        accent1: "#89C2D9",
+        accent2: "#E7A9A3",
+        border1: "#D1D5DB",
+        border2: "#9CA3AF",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

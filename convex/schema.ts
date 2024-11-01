@@ -14,6 +14,7 @@ const schema = defineSchema({
     isAnonymous: v.optional(v.boolean()),
     numOwned: v.optional(v.number()),
     numLiked: v.optional(v.number()),
+    numLikedByOthers: v.optional(v.number()),
     ownedSets: v.optional(v.array(v.id("sets"))),
     likedSets: v.optional(v.array(v.id("sets"))),
   }).index("email", ["email"]),
