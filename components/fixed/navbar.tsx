@@ -16,7 +16,7 @@ export default function Navbar() {
         <MobileSidebar />
       </div>
       {/* Right side buttons */}
-      <div className="flex items-center space-x-8 hidden md:block">
+      <div className="flex items-center space-x-8">
         <UserButton />
       </div>
     </nav>
