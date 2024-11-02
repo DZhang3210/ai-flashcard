@@ -16,7 +16,6 @@ export default function UserProfile() {
     status: setsStatus,
     loadMore: loadMoreSets,
   } = useGetSets({ keyword: search });
-
   if (isLoading) return <UserProfileSkeleton />;
   return (
     <div className="px-4 py-8 w-full bg-background1 min-h-[calc(100vh-100px)]">

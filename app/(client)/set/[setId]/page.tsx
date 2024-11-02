@@ -1,14 +1,18 @@
 "use client";
 import { Id } from "@/convex/_generated/dataModel";
+import { useDeleteFlashcard } from "@/features/flashcard/api/use-delete-flashcard";
 import { useGetSet } from "@/features/set/api/use-get-set";
 import useCreateFlashcard from "@/hooks/create-flash-hook";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
+import { toast } from "sonner";
 
 const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
-  const { data: set } = useGetSet(params.setId);
+  const { data: set, isLoading } = useGetSet(params.setId);
   const flashcardModal = useCreateFlashcard();
-  const flashcards = set?.flashcards;
+  const { mutate: deleteFlashcard, isPending: isDeleting } =
+    useDeleteFlashcard();
+  const flashcards = set?.flashcards || [];
   const cards = flashcards?.map((flashcard, index) => ({
     id: index,
     frontHTML: (
@@ -36,13 +40,42 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
       </button>
     ),
   }));
-
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
     nextCard: () => {},
     prevCard: () => {},
     resetArray: () => {},
   });
+
+  const handleEditFlashcard = () => {
+    if (currentCard - 1 < 0 || currentCard - 1 > flashcards?.length) return;
+    const currentFlashcard = flashcards?.[currentCard - 1];
+    if (!currentFlashcard) return;
+    flashcardModal.setMany({
+      editMode: true,
+      front: currentFlashcard.front,
+      back: currentFlashcard.back,
+      id: currentFlashcard._id,
+      setId: params.setId,
+    });
+    flashcardModal.toggle();
+  };
+  const handleDeleteFlashcard = () => {
+    if (currentCard - 1 < 0 || currentCard - 1 > flashcards?.length) return;
+    const currentFlashcard = flashcards?.[currentCard - 1];
+    if (!currentFlashcard) return;
+    deleteFlashcard(
+      { flashCardId: currentFlashcard._id },
+      {
+        onSuccess: () => {
+          toast.success("Flashcard deleted");
+        },
+        onError: () => {
+          toast.error("Failed to delete flashcard");
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     // Don't add the event listener if the modal is open
@@ -70,17 +103,35 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     };
   }, [flashcardModal.isOn]);
 
+  useEffect(() => {
+    if (flashcards.length <= 0 && !flashcardModal.isOn && !isLoading) {
+      flashcardModal.setOn({ setId: params.setId });
+    }
+  }, [flashcards, flashcardModal.isOn, isLoading, params.setId]);
+
+  const [currentCard, setCurrentCard] = useState(1);
+
+  if (!set && !isLoading) return <div>Set not found</div>;
+
   return (
     <div className="flex flex-col items-center p-10 h-[calc(100vh-100px)] w-full">
-      <div className="">
+      <div className="flex flex-col items-center justify-center mb-5">
+        <h1 className="text-4xl font-bold">{set?.name}</h1>
+        <p className="text-xl text-gray-500">{set?.description}</p>
+      </div>
+      <div className="flex">
         <FlashcardArray
           cards={cards || []}
           currentCardFlipRef={flipRef}
           forwardRef={forwardRef}
+          onCardChange={(id, index) => setCurrentCard(index)}
         />
       </div>
       <div className="grid grid-cols-4 gap-4 w-full max-w-6xl">
-        <button className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition">
+        <button
+          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+          onClick={handleEditFlashcard}
+        >
           Edit Card
         </button>
         <button
@@ -89,7 +140,11 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
         >
           Add Card
         </button>
-        <button className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition">
+        <button
+          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+          onClick={handleDeleteFlashcard}
+          disabled={isDeleting}
+        >
           Remove Card
         </button>
       </div>

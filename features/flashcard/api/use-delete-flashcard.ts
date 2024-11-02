@@ -5,11 +5,9 @@ import { useCallback, useMemo, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 
 type RequestType = {
-  name: string;
-  description: string;
-  image?: string;
+  flashCardId: Id<"flashcards">;
 };
-type ResponseType = Id<"sets">;
+type ResponseType = Id<"flashcards">;
 
 type Options = {
   onSuccess?: (data: ResponseType) => void;
@@ -18,7 +16,7 @@ type Options = {
   throwError?: boolean;
 };
 
-export const useCreateSet = () => {
+export const useDeleteFlashcard = () => {
   const [data, setData] = useState<ResponseType | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [status, setStatus] = useState<
@@ -30,7 +28,7 @@ export const useCreateSet = () => {
   const isError = useMemo(() => status === "error", [status]);
   const isSettled = useMemo(() => status === "settled", [status]);
 
-  const mutation = useMutation(api.set.createSet);
+  const mutation = useMutation(api.flashcard.deleteFlashcard);
 
   const mutate = useCallback(
     async (values: RequestType, options?: Options) => {

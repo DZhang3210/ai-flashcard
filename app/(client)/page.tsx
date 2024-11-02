@@ -13,8 +13,8 @@ export default function Home() {
           </h1>
         </div>
         <Link href={`/user/current`}>
-          <div className="bg-black text-black rounded-full hover:bg-font2/70 transition py-5 px-20 lg:py-7 duration-300 cursor-pointer">
-            <div className="flex items-center justify-between space-x-2 text-xl lg:text-3xl text-white">
+          <div className="bg-black text-black rounded-full hover:bg-font2/70 transition py-3 px-20 lg:py-5 duration-300 cursor-pointer">
+            <div className="flex items-center justify-between space-x-2 text-xl lg:text-2xl text-white">
               Let&apos;s Go!
             </div>
           </div>

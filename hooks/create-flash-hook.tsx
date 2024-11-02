@@ -12,6 +12,8 @@ interface Flashcard {
   toggle: () => void;
   setOn: ({ setId }: { setId: Id<"sets"> }) => void;
   setOff: () => void;
+  setFront: (front: string) => void;
+  setBack: (back: string) => void;
 }
 
 const useCreateFlashcard = create<Flashcard>((set) => ({
@@ -33,6 +35,8 @@ const useCreateFlashcard = create<Flashcard>((set) => ({
       back: "",
       setId: null,
     }),
+  setFront: (front: string) => set({ front }),
+  setBack: (back: string) => set({ back }),
 }));
 
 export default useCreateFlashcard;

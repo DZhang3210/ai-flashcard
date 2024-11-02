@@ -17,6 +17,7 @@ import type * as auth from "../auth.js";
 import type * as flashcard from "../flashcard.js";
 import type * as http from "../http.js";
 import type * as set from "../set.js";
+import type * as upload from "../upload.js";
 import type * as users from "../users.js";
 
 /**
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   flashcard: typeof flashcard;
   http: typeof http;
   set: typeof set;
+  upload: typeof upload;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
