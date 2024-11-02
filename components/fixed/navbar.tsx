@@ -12,6 +12,12 @@ export default function Navbar() {
           <h1 className="text-3xl font-bold hidden md:block ">Recall IQ </h1>
         </div>
       </Link>
+      <Link
+        href="/explore"
+        className="hidden md:block border-2 rounded-full border-font1 text-font1 px-6 py-2 hover:bg-font1 transition duration-300 hover:text-white text-2xl"
+      >
+        Explore
+      </Link>
       <div className="block md:hidden">
         <MobileSidebar />
       </div>

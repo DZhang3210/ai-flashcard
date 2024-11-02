@@ -1,15 +1,19 @@
+import { Id } from "@/convex/_generated/dataModel";
 import { create } from "zustand";
 
 interface Set {
   isOn: boolean;
   editMode: boolean;
-  id: string;
+  id: Id<"sets"> | null;
   title: string;
   description: string;
-  logoImage: string;
-  bannerImage: string;
-  bannerColor: string | null;
+  image: string | null;
+  previewImage: string | null;
   setMany: (values: Partial<Set>) => void;
+  setTitle: (title: string) => void;
+  setDescription: (description: string) => void;
+  setImage: (image: string) => void;
+  setPreviewImage: (previewImage: string | null) => void;
   toggle: () => void;
   setOn: () => void;
   setOff: () => void;
@@ -18,12 +22,15 @@ interface Set {
 const useCreateSet = create<Set>((set) => ({
   isOn: false,
   editMode: false,
-  id: "",
+  id: null,
   title: "",
   description: "",
-  logoImage: "",
-  bannerImage: "",
-  bannerColor: null,
+  image: null,
+  previewImage: null,
+  setTitle: (title: string) => set({ title }),
+  setDescription: (description: string) => set({ description }),
+  setImage: (image: string) => set({ image }),
+  setPreviewImage: (previewImage: string | null) => set({ previewImage }),
   setMany: (values: Partial<Set>) => set(values),
   toggle: () => set((state) => ({ isOn: !state.isOn })),
   setOn: () => set({ isOn: true }),
@@ -33,10 +40,9 @@ const useCreateSet = create<Set>((set) => ({
       editMode: false,
       title: "",
       description: "",
-      logoImage: "",
-      bannerImage: "",
-      bannerColor: null,
-      id: "",
+      image: null,
+      previewImage: null,
+      id: null,
     }),
 }));
 

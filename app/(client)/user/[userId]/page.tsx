@@ -6,15 +6,24 @@ import { useGetSets } from "@/features/set/api/use-get-sets";
 import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useGetUser } from "@/features/auth/api/use-get-user";
+import { useCurrentUser } from "@/features/auth/api/use-current-user";
+import { useRouter } from "next/dist/client/components/navigation";
 
 export default function UserProfile({
   params: { userId },
 }: {
   params: { userId: string };
 }) {
+  const router = useRouter();
   const { data: user, isLoading } = useGetUser(userId as Id<"users">);
+  const { data: currentUser } = useCurrentUser();
 
   const { image, name, numOwned, numLiked, numLikedByOthers } = user ?? {};
+
+  if (currentUser?._id === userId) {
+    router.push("/user/current");
+  }
+
   const [search, setSearch] = useState("");
 
   const {
@@ -52,7 +61,12 @@ export default function UserProfile({
           </div>
         </div>
 
-        <UserTabs sets={sets} search={search} setSearch={setSearch} />
+        <UserTabs
+          sets={sets}
+          search={search}
+          setSearch={setSearch}
+          toggleCreate={true}
+        />
         <div
           className="h-1"
           ref={(el) => {

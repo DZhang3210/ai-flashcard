@@ -10,10 +10,12 @@ const UserTabs = ({
   sets,
   search,
   setSearch,
+  toggleCreate = false,
 }: {
   sets: SetWithCreator[];
   search: string;
   setSearch: (search: string) => void;
+  toggleCreate?: boolean;
 }) => {
   const [tab, setTab] = useState(0);
   return (
@@ -41,7 +43,12 @@ const UserTabs = ({
         </button>
       </div>
       {tab === 0 && (
-        <SetFeed sets={sets} search={search} setSearch={setSearch} />
+        <SetFeed
+          sets={sets}
+          search={search}
+          setSearch={setSearch}
+          toggleCreate={toggleCreate}
+        />
       )}
       {tab === 1 && <LikedFeed />}
     </div>

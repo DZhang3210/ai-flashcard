@@ -40,6 +40,65 @@ export const createSet = mutation({
   },
 });
 
+export const editSet = mutation({
+  args: {
+    setId: v.id("sets"),
+    name: v.string(),
+    description: v.string(),
+    image: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+    const { name, description, image } = args;
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    let setId;
+    if (image) {
+      setId = await ctx.db.patch(args.setId, {
+        name,
+        description,
+        thumbnail: image || null,
+        updatedAt: Date.now(),
+      });
+    } else {
+      setId = await ctx.db.patch(args.setId, {
+        name,
+        description,
+        updatedAt: Date.now(),
+      });
+    }
+
+    return setId;
+  },
+});
+
+export const deleteSet = mutation({
+  args: {
+    setId: v.id("sets"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const setId = await ctx.db.delete(args.setId);
+    await ctx.db.patch(userId, {
+      numOwned: user.numOwned ? user.numOwned - 1 : 0,
+      ownedSets: user.ownedSets?.filter((id) => id !== args.setId) || [],
+    });
+    return setId;
+  },
+});
+
 export const get = query({
   args: {
     userId: v.optional(v.id("users")),
@@ -55,8 +114,6 @@ export const get = query({
         continueCursor: "",
       };
     }
-
-    const user = await ctx.db.get(userId);
 
     const keyword = args.keyword ? args.keyword?.trim()?.length > 0 : false;
 
@@ -97,18 +154,22 @@ export const get = query({
       page: (
         await Promise.all(
           data.page.map(async (item) => {
-            const [creator, thumbnail] = await Promise.all([
+            const [creator, thumbnail, isLiked] = await Promise.all([
               ctx.db.get(item.creator),
               item.thumbnail ? await ctx.storage.getUrl(item.thumbnail) : null,
+              ctx.db
+                .query("likes")
+                .withIndex("user_set", (q) =>
+                  q.eq("user", userId).eq("set", item._id)
+                )
+                .first(),
             ]);
 
             if (!creator) return null;
             return {
               ...item,
               creator,
-              isLiked: user?.likedSets
-                ? user?.likedSets.includes(item._id)
-                : false,
+              isLiked: isLiked !== null,
               thumbnail,
             };
           })
@@ -135,8 +196,6 @@ export const getAll = query({
       };
     }
 
-    const user = await ctx.db.get(userId);
-
     const keyword = args.keyword ? args.keyword?.trim()?.length > 0 : false;
 
     const data = keyword
@@ -155,14 +214,23 @@ export const getAll = query({
       page: (
         await Promise.all(
           data.page.map(async (item) => {
-            const creator = await ctx.db.get(item.creator);
-            if (!creator) return null;
+            const [creator, thumbnail, isLiked] = await Promise.all([
+              ctx.db.get(item.creator),
+              item.thumbnail ? await ctx.storage.getUrl(item.thumbnail) : null,
+              ctx.db
+                .query("likes")
+                .withIndex("user_set", (q) =>
+                  q.eq("user", userId).eq("set", item._id)
+                )
+                .first(),
+            ]);
+            if (!creator || item.creator === userId || item.numFlashcards <= 0)
+              return null;
             return {
               ...item,
               creator,
-              isLiked: user?.likedSets
-                ? user?.likedSets.includes(item._id)
-                : false,
+              thumbnail,
+              isLiked: isLiked !== null,
             };
           })
         )
@@ -190,15 +258,21 @@ export const getById = query({
       ctx.db.get(args.setId),
     ]);
 
-    const [user, thumbnail] = await Promise.all([
+    const [user, thumbnail, isLiked] = await Promise.all([
       ctx.db.get(set?.creator as Id<"users">),
       set?.thumbnail ? await ctx.storage.getUrl(set.thumbnail) : null,
+      ctx.db
+        .query("likes")
+        .withIndex("user_set", (q) =>
+          q.eq("user", userId).eq("set", args.setId)
+        )
+        .first(),
     ]);
 
     return {
       ...set,
       creator: user,
-      isLiked: false,
+      isLiked: isLiked !== null,
       thumbnail,
       flashcards,
     };

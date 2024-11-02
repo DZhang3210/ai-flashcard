@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sheet";
 
 import Link from "next/link";
-import { AlignJustify, Compass, Home, Users } from "lucide-react";
+import { AlignJustify } from "lucide-react";
 
 // import { usePathname } from "next/navigation";
 import NavLink from "./nav-link";
@@ -38,14 +38,12 @@ const MobileSidebar = () => {
               <h1 className="text-2xl md:text-3xl font-bold">Recall IQ</h1>
             </div>
           </Link>
-          <div className="flex flex-col items-start justify-start h-full py-4 px-2 space-y-2">
-            <NavLink href="/posts" icon={Home} closeSheet={closeSheet}>
-              Home
-            </NavLink>
-            <NavLink href="/popular" icon={Compass} closeSheet={closeSheet}>
-              Popular
-            </NavLink>
-            <NavLink href="/thread" icon={Users} closeSheet={closeSheet}>
+          <div className="flex flex-col items-start justify-start h-full py-8 px-2 space-y-2">
+            <NavLink
+              href="/explore"
+              closeSheet={closeSheet}
+              className="text-2xl text-font1 border-b-2 border-font1 rounded-3xl hover:bg-font1 transition duration-300 hover:text-white bg-white"
+            >
               Explore
             </NavLink>
 

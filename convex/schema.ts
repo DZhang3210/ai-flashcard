@@ -16,7 +16,6 @@ const schema = defineSchema({
     numLiked: v.optional(v.number()),
     numLikedByOthers: v.optional(v.number()),
     ownedSets: v.optional(v.array(v.id("sets"))),
-    likedSets: v.optional(v.array(v.id("sets"))),
   }).index("email", ["email"]),
   sets: defineTable({
     name: v.string(),
@@ -39,6 +38,13 @@ const schema = defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("set", ["set"]),
+  likes: defineTable({
+    user: v.id("users"),
+    set: v.id("sets"),
+  })
+    .index("user", ["user"])
+    .index("set", ["set"])
+    .index("user_set", ["user", "set"]),
 });
 
 export default schema;
