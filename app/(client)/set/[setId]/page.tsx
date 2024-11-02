@@ -3,43 +3,49 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useDeleteFlashcard } from "@/features/flashcard/api/use-delete-flashcard";
 import { useGetSet } from "@/features/set/api/use-get-set";
 import useCreateFlashcard from "@/hooks/create-flash-hook";
-import React, { useEffect, useRef, useState } from "react";
+import { Ellipsis } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import { toast } from "sonner";
 
 const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
   const { data: set, isLoading } = useGetSet(params.setId);
   const flashcardModal = useCreateFlashcard();
+  // const setModal = useCreateSet();
   const { mutate: deleteFlashcard, isPending: isDeleting } =
     useDeleteFlashcard();
-  const flashcards = set?.flashcards || [];
-  const cards = flashcards?.map((flashcard, index) => ({
-    id: index,
-    frontHTML: (
-      <button
-        className="text-2xl w-full h-full flex justify-center items-center cursor-pointer"
-        onMouseDown={(e) => {
-          // Prevent text selection
-          e.preventDefault();
-          flipRef.current?.();
-        }}
-      >
-        {flashcard.front}
-      </button>
-    ),
-    backHTML: (
-      <button
-        className="text-2xl  w-full h-full flex justify-center items-center cursor-pointer"
-        onMouseDown={(e) => {
-          // Prevent text selection
-          e.preventDefault();
-          flipRef.current?.();
-        }}
-      >
-        {flashcard.back}
-      </button>
-    ),
-  }));
+  const flashcards = useMemo(() => set?.flashcards || [], [set]);
+  const cards = useMemo(
+    () =>
+      flashcards?.map((flashcard, index) => ({
+        id: index,
+        frontHTML: (
+          <button
+            className="text-2xl w-full h-full flex justify-center items-center cursor-pointer"
+            onMouseDown={(e) => {
+              // Prevent text selection
+              e.preventDefault();
+              flipRef.current?.();
+            }}
+          >
+            {flashcard.front}
+          </button>
+        ),
+        backHTML: (
+          <button
+            className="text-2xl  w-full h-full flex justify-center items-center cursor-pointer"
+            onMouseDown={(e) => {
+              // Prevent text selection
+              e.preventDefault();
+              flipRef.current?.();
+            }}
+          >
+            {flashcard.back}
+          </button>
+        ),
+      })),
+    [flashcards]
+  );
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
     nextCard: () => {},
@@ -76,6 +82,12 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
       }
     );
   };
+  // const handleEditSet = () => {
+  //   setModal.setMany({
+  //     title: set?.name,
+  //     description: set?.description,
+  //   });
+  // };
 
   useEffect(() => {
     // Don't add the event listener if the modal is open
@@ -107,7 +119,13 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     if (flashcards.length <= 0 && !flashcardModal.isOn && !isLoading) {
       flashcardModal.setOn({ setId: params.setId });
     }
-  }, [flashcards, flashcardModal.isOn, isLoading, params.setId]);
+  }, [
+    flashcards,
+    flashcardModal.isOn,
+    isLoading,
+    params.setId,
+    flashcardModal,
+  ]);
 
   const [currentCard, setCurrentCard] = useState(1);
 
@@ -146,6 +164,13 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
           disabled={isDeleting}
         >
           Remove Card
+        </button>
+        <button
+          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+          onClick={() => {}}
+          disabled={isDeleting}
+        >
+          <Ellipsis className="w-6 h-6" />
         </button>
       </div>
     </div>

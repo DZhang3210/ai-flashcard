@@ -80,6 +80,7 @@ const FeedItem = ({ set }: { set: SetWithCreator }) => {
           </p>
         </div>
       </Link>
+
       <Link
         href={`/user/${set.creator._id}`}
         className="text-sm hover:underline self-end mb-1"
