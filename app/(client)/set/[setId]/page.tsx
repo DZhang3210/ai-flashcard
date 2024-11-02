@@ -145,6 +145,10 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     isLoading,
     params.setId,
     flashcardModal,
+    currentUser?._id,
+    isLoadingUser,
+    router,
+    set?.creator?._id,
   ]);
 
   const [currentCard, setCurrentCard] = useState(1);
@@ -210,6 +214,11 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
           currentCardFlipRef={flipRef}
           forwardRef={forwardRef}
           onCardChange={(id, index) => setCurrentCard(index)}
+          FlashcardArrayStyle={{
+            minWidth: "80%",
+            // width: "80%",
+            padding: "0 10%",
+          }}
         />
       </div>
       <div className="grid grid-cols-4 gap-4 w-full max-w-6xl">
