@@ -1,13 +1,19 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import UserTabs from "../_components/user-tabs";
 import UserProfileSkeleton from "../_skeletons/user-profile-skeleton";
 import { useGetSets } from "@/features/set/api/use-get-sets";
 import { useState } from "react";
+import { Id } from "@/convex/_generated/dataModel";
+import { useGetUser } from "@/features/auth/api/use-get-user";
 
-export default function UserProfile() {
-  const { data: user, isLoading } = useCurrentUser();
+export default function UserProfile({
+  params: { userId },
+}: {
+  params: { userId: string };
+}) {
+  const { data: user, isLoading } = useGetUser(userId as Id<"users">);
+
   const { image, name, numOwned, numLiked, numLikedByOthers } = user ?? {};
   const [search, setSearch] = useState("");
 
@@ -15,7 +21,7 @@ export default function UserProfile() {
     results: sets,
     status: setsStatus,
     loadMore: loadMoreSets,
-  } = useGetSets({ keyword: search });
+  } = useGetSets({ keyword: search, userId: userId as Id<"users"> });
 
   if (isLoading) return <UserProfileSkeleton />;
   return (

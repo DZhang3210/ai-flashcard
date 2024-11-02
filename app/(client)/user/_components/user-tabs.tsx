@@ -4,8 +4,17 @@ import { Zap, ThumbsUp } from "lucide-react";
 import React, { useState } from "react";
 import SetFeed from "./set-feed";
 import LikedFeed from "./liked-feed";
+import { SetWithCreator } from "@/lib/types";
 
-const UserTabs = () => {
+const UserTabs = ({
+  sets,
+  search,
+  setSearch,
+}: {
+  sets: SetWithCreator[];
+  search: string;
+  setSearch: (search: string) => void;
+}) => {
   const [tab, setTab] = useState(0);
   return (
     <div className="w-full mt-10">
@@ -31,7 +40,9 @@ const UserTabs = () => {
           Liked
         </button>
       </div>
-      {tab === 0 && <SetFeed />}
+      {tab === 0 && (
+        <SetFeed sets={sets} search={search} setSearch={setSearch} />
+      )}
       {tab === 1 && <LikedFeed />}
     </div>
   );

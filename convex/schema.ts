@@ -21,11 +21,17 @@ const schema = defineSchema({
   sets: defineTable({
     name: v.string(),
     description: v.string(),
-    thumbnail: v.string(),
+    thumbnail: v.union(v.string(), v.null()),
     creator: v.id("users"),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }),
+    numFlashcards: v.number(),
+  })
+    .index("creator", ["creator"])
+    .searchIndex("name_creator", {
+      searchField: "name",
+      filterFields: ["creator"],
+    }),
   flashcards: defineTable({
     front: v.string(),
     back: v.string(),
