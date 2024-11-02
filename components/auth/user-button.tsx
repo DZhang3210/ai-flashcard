@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Loader, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,7 +19,9 @@ const UserButton = () => {
 
   // console.log("USER", data?.image);
   if (isLoading) {
-    return <Loader className="size-4 animate-spin text-muted-foreground" />;
+    return (
+      <div className="size-[60px] hover:opacity-75 transition animate-pulse rounded-full bg-muted-foreground"></div>
+    );
   }
   if (!data) {
     return null;
@@ -44,7 +46,7 @@ const UserButton = () => {
         >
           <div
             className="flex items-center space-x-4 hover:bg-black/90 transition"
-            onClick={() => router.push(`/user`)}
+            onClick={() => router.push(`/user/current`)}
           >
             <Avatar className="size-[50px] hover:opacity-75 transition">
               <AvatarImage alt={name} src={image} />

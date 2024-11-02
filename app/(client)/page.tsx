@@ -1,3 +1,4 @@
+import { BadgePlus, Pencil, Share, TestTube } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -11,7 +12,7 @@ export default function Home() {
             <span className="text-font4"> seconds</span>
           </h1>
         </div>
-        <Link href={`/user`}>
+        <Link href={`/user/current`}>
           <div className="bg-black text-black rounded-full hover:bg-font2/70 transition py-5 px-20 lg:py-7 duration-300 cursor-pointer">
             <div className="flex items-center justify-between space-x-2 text-xl lg:text-3xl text-white">
               Let&apos;s Go!
@@ -21,17 +22,29 @@ export default function Home() {
       </div>
       <div className="flex items-center justify-center  w-full">
         <div className=" grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 gap-4 w-full max-w-7xl border-3xl m-4 rounded-3xl">
-          <button className="bg-font1 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font1/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+          <button className="bg-font1 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font1/80 transition h-[200px] sm:h-[250px] xl:h-[300px]">
             <p className="text-3xl font-bold text-white">Generate</p>
+            <div className="flex flex-row items-center justify-center mt-6">
+              <BadgePlus className="w-24 h-24 sm:w-32 sm:h-32 text-white" />
+            </div>
           </button>
-          <button className="bg-font2 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font2/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+          <button className="bg-font2 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font2/80 transition h-[200px] sm:h-[250px] xl:h-[300px]">
             <p className="text-3xl text-white font-bold">Edit</p>
+            <div className="flex flex-row items-center justify-center mt-6">
+              <Pencil className="w-24 h-24 sm:w-32 sm:h-32 text-white" />
+            </div>
           </button>
-          <button className="bg-font3 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font3/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+          <button className="bg-font3 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font3/80 transition h-[200px] sm:h-[250px] xl:h-[300px]">
             <p className="text-3xl text-white font-bold">Test</p>
+            <div className="flex flex-row items-center justify-center mt-6">
+              <TestTube className="w-24 h-24 sm:w-32 sm:h-32 text-white" />
+            </div>
           </button>
-          <button className="bg-font4 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font4/80 transition h-[200px] md:h-[250px] xl:h-[300px]">
+          <button className="bg-font4 rounded-lg w-full flex flex-col items-center p-4 hover:bg-font4/80 transition h-[200px] sm:h-[250px] xl:h-[300px]">
             <p className="text-3xl text-white font-bold">Share</p>
+            <div className="flex flex-row items-center justify-center mt-6">
+              <Share className="w-24 h-24 sm:w-32 sm:h-32 text-white" />
+            </div>
           </button>
         </div>
       </div>

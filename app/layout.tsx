@@ -3,6 +3,7 @@ import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/auth/ConvexClientProvider";
 import { Toaster } from "sonner";
+import Modals from "@/components/modals";
 
 export const metadata: Metadata = {
   title: "AI Flashcards",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             {children}
             <Toaster />
+            <Modals />
           </ConvexClientProvider>
         </body>
       </html>

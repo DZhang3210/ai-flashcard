@@ -1,12 +1,13 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCurrentUser } from "@/features/auth/api/use-current-user";
-import UserTabs from "./_components/user-tabs";
+import UserTabs from "../_components/user-tabs";
+import UserProfileSkeleton from "../_skeletons/user-profile-skeleton";
 
 export default function UserProfile() {
   const { data: user, isLoading } = useCurrentUser();
   const { image, name, numOwned, numLiked, numLikedByOthers } = user ?? {};
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <UserProfileSkeleton />;
   return (
     <div className="px-4 py-8 w-full bg-background1 min-h-[calc(100vh-100px)]">
       <div className="max-w-5xl mx-auto">

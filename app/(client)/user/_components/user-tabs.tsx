@@ -2,6 +2,8 @@
 import { cn } from "@/lib/utils";
 import { Zap, ThumbsUp } from "lucide-react";
 import React, { useState } from "react";
+import SetFeed from "./set-feed";
+import LikedFeed from "./liked-feed";
 
 const UserTabs = () => {
   const [tab, setTab] = useState(0);
@@ -29,6 +31,8 @@ const UserTabs = () => {
           Liked
         </button>
       </div>
+      {tab === 0 && <SetFeed />}
+      {tab === 1 && <LikedFeed />}
     </div>
   );
 };
