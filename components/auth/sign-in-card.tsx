@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { SignInFlow } from "./types";
 import { TriangleAlert } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { Label } from "../ui/label";
 
 interface SignInCardProps {
   setState: (state: SignInFlow) => void;
@@ -46,11 +46,11 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
   };
 
   return (
-    <Card className="w-full h-full p-8 bg-[#181C1F] text-white">
+    <Card className="w-full h-full p-8 bg-background1 text-black border-none shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-2xl">Login to Continue</CardTitle>
-        <CardDescription className="text-gray-300 text-xl">
-          Use your email or another serve to continue
+        <CardTitle className="text-5xl w-full text-center">Welcome</CardTitle>
+        <CardDescription className="text-font4 text-3xl text-center border-2 rounded-full px-4 py-1 w-fit mx-auto border-font4">
+          Recall IQ
         </CardDescription>
       </CardHeader>
       {!!error && (
@@ -60,28 +60,38 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
         </div>
       )}
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-2.5 " onSubmit={onPasswordSignIn}>
-          <Input
-            disabled={pending}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            type="email"
-            className="text-lg h-10"
-            required
-          />
-          <Input
-            disabled={pending}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            type="password"
-            className="text-lg h-10"
-            required
-          />
+        <form className="space-y-8" onSubmit={onPasswordSignIn}>
+          <div className="flex flex-col gap-y-1">
+            <Label className="text-lg uppercase" htmlFor="email">
+              Email Address
+            </Label>
+            <Input
+              disabled={pending}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              className="h-10 text-xl border-0 border-b border-gray-300 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
+              required
+              name="email"
+            />
+          </div>
+          <div className="flex flex-col gap-y-1">
+            <Label className="text-lg uppercase" htmlFor="password">
+              Password
+            </Label>
+            <Input
+              disabled={pending}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              className="h-10 text-xl border-0 border-b border-gray-300 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
+              required
+              name="password"
+            />
+          </div>
           <Button
             type="submit"
-            className="w-full bg-white text-black hover:bg-gray-400 text-xl font-semibold"
+            className="w-full bg-black text-white hover:bg-black/60 text-xl font-semibold"
             size="lg"
             disabled={pending}
             aria-label="submit button"
@@ -89,32 +99,36 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
             Continue
           </Button>
         </form>
-        <Separator />
-        <div className="flex flex-col gap-y-2.5 text-black">
+        <div className="flex w-full items-center">
+          <div className="flex-grow border-t-2 border-black" />
+          <p className=" px-2 lowercase text-lg">or</p>
+          <div className="flex-grow border-t-2 border-black" />
+        </div>
+        <div className="grid grid-cols-2 gap-4 text-black">
           <Button
             disabled={pending}
             onClick={() => handleProviderSignIn("google")}
             variant="outline"
             size="lg"
-            className="w-full relative text-xl"
+            className="w-full flex items-center justify-center text-xl"
             aria-label="google button"
           >
-            <FaGoogle className="size-5 absolute top-2.5 left-2.5" />
-            Continue with Google
+            <FaGoogle className="text" />
+            Google
           </Button>
           <Button
             disabled={pending}
             onClick={() => handleProviderSignIn("github")}
             variant="outline"
             size="lg"
-            className="w-full relative text-xl "
+            className="w-full flex items-center justify-center text-xl"
             aria-label="github button"
           >
-            <FaGithub className="size-5 absolute top-2.5 left-2.5" />
-            Continue with Github
+            <FaGithub className="text-xl" />
+            Github
           </Button>
         </div>
-        <p className="text-base text-gray-300">
+        <p className="text-base text-gray-600">
           Don&apos;t have an account?{" "}
           <span
             className="text-sky-700 hover:underline cursor-pointer"

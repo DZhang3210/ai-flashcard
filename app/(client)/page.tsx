@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {
@@ -12,11 +11,13 @@ export default function Home() {
             <span className="text-font4"> seconds</span>
           </h1>
         </div>
-        <Button className="bg-black text-black rounded-full hover:bg-font2/70 transition py-5 px-20 lg:py-7 duration-300">
-          <div className="flex items-center justify-between space-x-2 text-xl lg:text-3xl text-white">
-            <Link href={`/user`}>Let&apos;s Go!</Link>
+        <Link href={`/user`}>
+          <div className="bg-black text-black rounded-full hover:bg-font2/70 transition py-5 px-20 lg:py-7 duration-300 cursor-pointer">
+            <div className="flex items-center justify-between space-x-2 text-xl lg:text-3xl text-white">
+              Let&apos;s Go!
+            </div>
           </div>
-        </Button>
+        </Link>
       </div>
       <div className="flex items-center justify-center  w-full">
         <div className=" grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 gap-4 w-full max-w-7xl border-3xl m-4 rounded-3xl">
