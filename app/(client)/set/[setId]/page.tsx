@@ -1,16 +1,15 @@
 "use client";
+import { Id } from "@/convex/_generated/dataModel";
+import { useGetSet } from "@/features/set/api/use-get-set";
+import useCreateFlashcard from "@/hooks/create-flash-hook";
 import React, { useEffect, useRef } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
 
-const FlashcardPage = () => {
-  const flashcards = [
-    { front: "What is the capital of Alaska?", back: "Juneau" },
-    { front: "What is the capital of California?", back: "Sacramento" },
-    { front: "What is the capital of Texas?", back: "Austin" },
-    { front: "What is the capital of New Mexico?", back: "Santa Fe" },
-    { front: "What is the capital of Arizona?", back: "Phoenix" },
-  ];
-  const cards = flashcards.map((flashcard, index) => ({
+const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
+  const { data: set } = useGetSet(params.setId);
+  const flashcardModal = useCreateFlashcard();
+  const flashcards = set?.flashcards;
+  const cards = flashcards?.map((flashcard, index) => ({
     id: index,
     frontHTML: (
       <button
@@ -46,6 +45,9 @@ const FlashcardPage = () => {
   });
 
   useEffect(() => {
+    // Don't add the event listener if the modal is open
+    if (flashcardModal.isOn) return;
+
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.code === "Space") {
         event.preventDefault();
@@ -66,13 +68,13 @@ const FlashcardPage = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  }, [flashcardModal.isOn]);
 
   return (
     <div className="flex flex-col items-center p-10 h-[calc(100vh-100px)] w-full">
       <div className="">
         <FlashcardArray
-          cards={cards}
+          cards={cards || []}
           currentCardFlipRef={flipRef}
           forwardRef={forwardRef}
         />
@@ -81,7 +83,10 @@ const FlashcardPage = () => {
         <button className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition">
           Edit Card
         </button>
-        <button className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition">
+        <button
+          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+          onClick={() => flashcardModal.setOn({ setId: params.setId })}
+        >
           Add Card
         </button>
         <button className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition">

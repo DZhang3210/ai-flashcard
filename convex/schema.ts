@@ -38,7 +38,7 @@ const schema = defineSchema({
     set: v.id("sets"),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }),
+  }).index("set", ["set"]),
 });
 
 export default schema;
