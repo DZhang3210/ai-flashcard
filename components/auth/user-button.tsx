@@ -11,6 +11,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const UserButton = () => {
   const router = useRouter();
@@ -23,10 +24,16 @@ const UserButton = () => {
       <div className="size-[60px] hover:opacity-75 transition animate-pulse rounded-full bg-muted-foreground"></div>
     );
   }
-  if (!data) {
-    return null;
-  }
 
+  if (!data) {
+    return (
+      <Link href="/auth">
+        <button className="border-2 border-font3 rounded-full px-6 py-2 hover:bg-font3 text-font3 transition duration-300 hover:text-white text-2xl">
+          Sign in
+        </button>
+      </Link>
+    );
+  }
   const { name, image, email } = data;
   const avatarFallback = name!.charAt(0).toUpperCase();
 

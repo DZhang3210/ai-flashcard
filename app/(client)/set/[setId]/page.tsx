@@ -7,6 +7,7 @@ import { useToggleLike } from "@/features/likes/api/use-toggle-like";
 import { useGetSet } from "@/features/set/api/use-get-set";
 import useCreateFlashcard from "@/hooks/create-flash-hook";
 import useCreateSet from "@/hooks/create-set-hook";
+import useCreateUpload from "@/hooks/create-upload-hook";
 import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,10 +21,11 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
   const { data: set, isLoading } = useGetSet(params.setId);
   const { data: currentUser, isLoading: isLoadingUser } = useCurrentUser();
   const flashcardModal = useCreateFlashcard();
-  // const setModal = useCreateSet();
   const { mutate: deleteFlashcard, isPending: isDeleting } =
     useDeleteFlashcard();
+
   const setModal = useCreateSet();
+  const uploadModal = useCreateUpload();
 
   const flashcards = useMemo(() => set?.flashcards || [], [set]);
   const cards = useMemo(
@@ -93,13 +95,6 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
       }
     );
   };
-  // const handleEditSet = () => {
-  //   setModal.setMany({
-  //     title: set?.name,
-  //     description: set?.description,
-  //   });
-  // };
-
   useEffect(() => {
     // Don't add the event listener if the modal is open
     if (flashcardModal.isOn) return;
@@ -241,7 +236,10 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
         >
           Remove Card
         </button>
-        <button className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition">
+        <button
+          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+          onClick={() => uploadModal.setOn(params.setId)}
+        >
           Upload
         </button>
       </div>
