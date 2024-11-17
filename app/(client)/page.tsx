@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import { useMemo, useRef } from "react";
-import { AArrowDown, MoveRight } from "lucide-react";
+import { AArrowDown, DollarSign, MoveRight } from "lucide-react";
 export default function Home() {
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
@@ -104,12 +104,14 @@ export default function Home() {
               <AArrowDown className="w-8 h-8 text-font3" />
             </div>
             <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">Easy to Use</h1>
+              <h1 className="text-2xl font-bold text-gray-800">
+                Completely Free
+              </h1>
               <p className="text-gray-600">
-                Our flashcards are easy to use and can be created in seconds
-                with AI.
+                Our flashcards are completely free to use. No subscription
+                required.
               </p>
-              <AArrowDown className="w-8 h-8 text-font3" />
+              <DollarSign className="w-8 h-8 text-font3" />
             </div>
             <div className="flex flex-col space-y-2">
               <h1 className="text-2xl font-bold text-gray-800">Easy to Use</h1>
