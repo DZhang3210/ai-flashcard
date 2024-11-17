@@ -1,16 +1,19 @@
 import useCreateSet from "@/hooks/create-set-hook";
 import { SetWithCreator } from "@/lib/types";
-import { Search } from "lucide-react";
+import { Ellipsis, Search } from "lucide-react";
 import React, { useMemo } from "react";
-import { formatDate } from "date-fns";
 
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useToggleLike } from "@/features/likes/api/use-toggle-like";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const SetFeed = ({
   sets,
@@ -24,7 +27,7 @@ const SetFeed = ({
 }) => {
   return (
     <div className="flex flex-col gap-4 mt-6">
-      <div className="p-4 rounded-3xl  ">
+      <div className="rounded-3xl  ">
         <Label
           className="text-xl uppercase flex flex-row gap-2 items-center"
           htmlFor="search"
@@ -35,17 +38,17 @@ const SetFeed = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           type="email"
-          className="h-10 text-xl border-0 border-b border-gray-300 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
+          className="h-10 text-xl border-0 border-b border-gray-400 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
           required
           name="email"
         />
       </div>
 
-      <div className=" mt-8 text-lg uppercase">Flashcards</div>
-
-      {sets.map((set) => (
-        <FeedItem set={set} key={set._id} />
-      ))}
+      <div className=" gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {sets.map((set) => (
+          <FeedItem set={set} key={set._id} />
+        ))}
+      </div>
     </div>
   );
 };
@@ -69,7 +72,7 @@ const FeedItem = ({ set }: { set: SetWithCreator }) => {
     <div
       className={`flex flex-row gap-2 px-2 py-4 border-b-4 border-font${borderColor}`}
     >
-      <div className="flex flex-row gap-2 flex-1 transition hover:scale-[100.5%]">
+      <div className="flex flex-row gap-2 flex-1 transition">
         <Image
           src={set.thumbnail ?? "/nijika-image.jpg"}
           alt={set.name}
@@ -78,15 +81,15 @@ const FeedItem = ({ set }: { set: SetWithCreator }) => {
           className="rounded-xl overflow-hidden aspect-square object-cover w-[60px] h-[60px]"
         />
         <div>
-          <p className={`text-lg font-bold flex gap-3 items-center`}>
+          <p className={`text-base font-bold flex gap-2 items-center`}>
             <Link
               href={`/set/${set._id}`}
-              className={cn(`hover:text-font${borderColor}`)}
+              className={cn(`hover:text-font${borderColor} text-gray-600`)}
             >
               {set.name}
             </Link>
             <button
-              className="font-normal text-sm right-0"
+              className="font-normal text-xs right-0"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleLike({ setId: set._id });
@@ -104,24 +107,30 @@ const FeedItem = ({ set }: { set: SetWithCreator }) => {
               )}
             </button>
           </p>
-          <p className="text-sm">
-            {formatDate(set.createdAt, "MMM d")} • {set.numFlashcards} cards •
-            by <span>{set.creator.name}</span>
+          <p className="text-xs text-gray-500">
+            {set.numFlashcards} cards • by <span>{set.creator.name}</span>
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <Link
-          href={`/user/${set.creator._id}`}
-          className="text-sm hover:underline self-end mb-1"
-        >
-          View Profile
-        </Link>
-        <Button variant="outline" onClick={handleEdit}>
-          Edit
-        </Button>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Ellipsis className="w-4 h-4" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent asChild>
+          <div className="flex flex-col gap-1 text-sm items-start p-2">
+            <Link
+              href={`/user/${set.creator._id}`}
+              className="hover:underline mb-1"
+            >
+              View Profile
+            </Link>
+            <button className="hover:underline" onClick={handleEdit}>
+              Edit
+            </button>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

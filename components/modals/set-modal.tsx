@@ -87,14 +87,14 @@ const SetModal = () => {
 
   return (
     <Modal isOpen={setModal.isOn} onClose={setModal.setOff}>
-      <div className="text-3xl w-full text-center text-font3 flex flex-row items-center justify-center gap-3">
+      <div className="text-3xl w-full text-center text-font2 flex flex-row items-center justify-center gap-3">
         {setModal.editMode ? "Edit Set" : "New Set"}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5">
         <div>
           <div className="flex flex-col gap-y-6">
-            <Label className="text-lg uppercase" htmlFor="title">
+            <Label className="text-lg uppercase text-font2" htmlFor="title">
               Title
             </Label>
             <Input
@@ -108,7 +108,10 @@ const SetModal = () => {
             />
           </div>
           <div className="flex flex-col gap-y-1">
-            <Label className="text-lg uppercase" htmlFor="description">
+            <Label
+              className="text-lg uppercase text-font2"
+              htmlFor="description"
+            >
               Description
             </Label>
             <Textarea
@@ -130,7 +133,7 @@ const SetModal = () => {
       </div>
       <div className="flex flex-row items-center justify-center gap-1">
         <button
-          className="w-full bg-font3 text-background1 p-2 rounded-md hover:bg-font3/80 transition-all duration-100 grow"
+          className="w-full bg-font2 text-background1 p-2 rounded-md hover:bg-font2/80 transition-all duration-100 grow"
           onClick={onSubmit}
           disabled={creatingSet || editingSet}
         >

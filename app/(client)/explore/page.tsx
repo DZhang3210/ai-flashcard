@@ -13,7 +13,7 @@ const ExplorePage = () => {
   return (
     <div className="px-4 py-8 w-full bg-background1 min-h-[calc(100vh-100px)]">
       <div className="max-w-6xl mx-auto">
-        <div className="text-5xl font-bold uppercase">Explore</div>
+        <div className="text-5xl font-bold uppercase text-font1">Explore</div>
         <SetFeed
           sets={sets}
           search={search}

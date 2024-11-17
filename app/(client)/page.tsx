@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import { useMemo, useRef } from "react";
-import { AArrowDown, DollarSign, MoveRight } from "lucide-react";
+import { AArrowDown, Apple, DollarSign, MoveRight, Search } from "lucide-react";
 export default function Home() {
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
@@ -10,23 +10,26 @@ export default function Home() {
     prevCard: () => {},
     resetArray: () => {},
   });
-  const flashcards = [
-    {
-      id: 1,
-      front: "What is the capital of France?",
-      back: "Paris",
-    },
-    {
-      id: 2,
-      front: "What is the capital of France?",
-      back: "Paris",
-    },
-    {
-      id: 3,
-      front: "What is the capital of France?",
-      back: "Paris",
-    },
-  ];
+  const flashcards = useMemo(
+    () => [
+      {
+        id: 1,
+        front: "How much does it cost?",
+        back: "Nothing. It is completely free.",
+      },
+      {
+        id: 2,
+        front: "How do I create flashcards?",
+        back: "You can create flashcards by clicking on the 'Create' button.",
+      },
+      {
+        id: 3,
+        front: "How do I share my flashcards?",
+        back: "You can share your flashcards by clicking on the 'Share' button.",
+      },
+    ],
+    []
+  );
   const cards = useMemo(
     () =>
       flashcards?.map((flashcard, index) => ({
@@ -59,7 +62,7 @@ export default function Home() {
     [flashcards]
   );
   return (
-    <div className="w-full min-h-[calc(100vh-100px)] bg-background1 flex flex-col gap-20">
+    <div className="w-full min-h-[calc(100vh-100px)] bg-background1 flex flex-col gap-20 py-10">
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-10 items-center py-10 space-y-6 w-full">
           <div className="flex flex-col items-center space-y-2 col-span-5 w-full">
@@ -114,20 +117,22 @@ export default function Home() {
               <DollarSign className="w-8 h-8 text-font3" />
             </div>
             <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">Easy to Use</h1>
+              <h1 className="text-2xl font-bold text-gray-800">
+                Share your flashcards
+              </h1>
               <p className="text-gray-600">
-                Our flashcards are easy to use and can be created in seconds
-                with AI.
+                Search and find flashcards created by other users.
               </p>
-              <AArrowDown className="w-8 h-8 text-font3" />
+              <Search className="w-8 h-8 text-font3" />
             </div>
             <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">Easy to Use</h1>
+              <h1 className="text-2xl font-bold text-gray-800">
+                Customize your flashcards
+              </h1>
               <p className="text-gray-600">
-                Our flashcards are easy to use and can be created in seconds
-                with AI.
+                Make your flashcards unique with your own images and colors.
               </p>
-              <AArrowDown className="w-8 h-8 text-font3" />
+              <Apple className="w-8 h-8 text-font3" />
             </div>
           </div>
         </div>
