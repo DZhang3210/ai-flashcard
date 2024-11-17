@@ -16,14 +16,12 @@ const SetFeed = ({
   sets,
   search,
   setSearch,
-  toggleCreate = false,
 }: {
   sets: SetWithCreator[];
   search: string;
   setSearch: (search: string) => void;
   toggleCreate?: boolean;
 }) => {
-  const createSet = useCreateSet();
   return (
     <div className="flex flex-col gap-4 mt-6">
       <div className="p-4 rounded-3xl  ">
@@ -44,15 +42,7 @@ const SetFeed = ({
       </div>
 
       <div className=" mt-8 text-lg uppercase">Flashcards</div>
-      {!toggleCreate && (
-        <button
-          className="flex flex-row gap-2 px-10 py-4 rounded-full border-black/20 border-2 hover:bg-black hover:text-white transition-all hover:scale-[101%]"
-          onClick={createSet.setOn}
-        >
-          <Plus className="w-6 h-6" />
-          <p>Create Set</p>
-        </button>
-      )}
+
       {sets.map((set) => (
         <FeedItem set={set} key={set._id} />
       ))}

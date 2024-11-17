@@ -33,17 +33,19 @@ export default function UserProfile({
   } = useGetSets({ keyword: search, userId: userId as Id<"users"> });
 
   if (isLoading) return <UserProfileSkeleton />;
+  const avatarFallback = user
+    ?.name!.split(" ")
+    .map((part) => part[0]?.toUpperCase())
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("");
   return (
     <div className="px-4 py-8 w-full bg-background1 min-h-[calc(100vh-100px)]">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-row space-y-4 gap-10 ">
-          <Avatar className="h-24 w-24 md:h-28 md:w-28">
-            <AvatarImage src={image} alt={name} />
-            <AvatarFallback>
-              {name
-                ?.split(" ")
-                .map((n) => n[0])
-                .join("") || "U"}
+          <Avatar className="size-[100px] hover:opacity-75 transition border-2 border-font3 hover:border-transparent">
+            <AvatarFallback className="text-font3 text-3xl hover:bg-font3 transition hover:text-white">
+              {avatarFallback}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col justify-start items-start h-full w-full">

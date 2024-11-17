@@ -3,8 +3,10 @@
 import Link from "next/link";
 import UserButton from "../auth/user-button";
 import MobileSidebar from "./mobile-sidebar";
+import useCreateSet from "@/hooks/create-set-hook";
 
 export default function Navbar() {
+  const createSet = useCreateSet();
   return (
     <nav className="bg-background1 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10">
       <Link href="/" className="hidden md:block">
@@ -23,6 +25,12 @@ export default function Navbar() {
       </div>
       {/* Right side buttons */}
       <div className="flex items-center space-x-8">
+        <button
+          onClick={createSet.setOn}
+          className="text-font2 text-2xl px-6 py-2 border-2 border-font2 rounded-full hover:bg-font2 hover:text-white transition-all duration-300"
+        >
+          Create Set
+        </button>
         <UserButton />
       </div>
     </nav>

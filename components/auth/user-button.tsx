@@ -35,15 +35,21 @@ const UserButton = () => {
     );
   }
   const { name, image, email } = data;
-  const avatarFallback = name!.charAt(0).toUpperCase();
+  const avatarFallback = name!
+    .split(" ")
+    .map((part) => part[0]?.toUpperCase())
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("");
 
   // const router = useRouter();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="outline-none relative">
-        <Avatar className="size-[60px] hover:opacity-75 transition">
-          <AvatarImage alt={name} src={image} />
-          <AvatarFallback>{avatarFallback}</AvatarFallback>
+        <Avatar className="size-[60px] hover:opacity-75 transition border-2 border-font3 hover:border-transparent">
+          <AvatarFallback className="text-font3 text-xl hover:bg-font3 transition hover:text-white">
+            {avatarFallback}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-80 bg-background1 text-black *:p-6">
@@ -52,12 +58,13 @@ const UserButton = () => {
           asChild
         >
           <div
-            className="flex items-center space-x-4 hover:bg-black/90 transition"
+            className="flex items-center space-x-4 hover:bg-black/10 transition"
             onClick={() => router.push(`/user/current`)}
           >
-            <Avatar className="size-[50px] hover:opacity-75 transition">
-              <AvatarImage alt={name} src={image} />
-              <AvatarFallback>{avatarFallback}</AvatarFallback>
+            <Avatar className="size-[50px] hover:opacity-75 transition border-2 border-font3 hover:border-transparent">
+              <AvatarFallback className="text-font3 text-xl hover:bg-font3 transition hover:text-white">
+                {avatarFallback}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <p className="text-lg font-bold text-black group-hover:text-black transition">
