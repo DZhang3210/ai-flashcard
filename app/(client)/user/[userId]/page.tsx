@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import UserTabs from "../_components/user-tabs";
 import UserProfileSkeleton from "../_skeletons/user-profile-skeleton";
 import { useGetSets } from "@/features/set/api/use-get-sets";
@@ -18,7 +18,7 @@ export default function UserProfile({
   const { data: user, isLoading } = useGetUser(userId as Id<"users">);
   const { data: currentUser } = useCurrentUser();
 
-  const { image, name, numOwned, numLiked, numLikedByOthers } = user ?? {};
+  const { name, numOwned, numLiked, numLikedByOthers } = user ?? {};
 
   if (currentUser?._id === userId) {
     router.push("/user/current");

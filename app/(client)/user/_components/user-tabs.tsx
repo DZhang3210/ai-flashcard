@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Zap, ThumbsUp, Plus } from "lucide-react";
+import { Zap, ThumbsUp } from "lucide-react";
 import React, { useState } from "react";
 import SetFeed from "./set-feed";
 import LikedFeed from "./liked-feed";

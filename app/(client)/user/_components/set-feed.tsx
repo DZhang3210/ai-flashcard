@@ -1,6 +1,6 @@
 import useCreateSet from "@/hooks/create-set-hook";
 import { SetWithCreator } from "@/lib/types";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import React, { useMemo } from "react";
 import { formatDate } from "date-fns";
 

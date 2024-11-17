@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { FlashcardArray } from "react-quizlet-flashcard";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { AArrowDown, MoveRight } from "lucide-react";
 export default function Home() {
   const flipRef = useRef<() => void>(() => {});
@@ -10,7 +10,6 @@ export default function Home() {
     prevCard: () => {},
     resetArray: () => {},
   });
-  const [currentCard, setCurrentCard] = useState(0);
   const flashcards = [
     {
       id: 1,
@@ -83,7 +82,6 @@ export default function Home() {
               cards={cards || []}
               currentCardFlipRef={flipRef}
               forwardRef={forwardRef}
-              onCardChange={(id, index) => setCurrentCard(index)}
               FlashcardArrayStyle={{
                 minWidth: "80%",
                 // width: "80%",

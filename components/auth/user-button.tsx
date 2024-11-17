@@ -9,7 +9,7 @@ import {
 import { LogOut } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useCurrentUser } from "@/features/auth/api/use-current-user";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -34,7 +34,7 @@ const UserButton = () => {
       </Link>
     );
   }
-  const { name, image, email } = data;
+  const { name, email } = data;
   const avatarFallback = name!
     .split(" ")
     .map((part) => part[0]?.toUpperCase())
