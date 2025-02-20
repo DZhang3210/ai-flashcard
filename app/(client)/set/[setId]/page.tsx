@@ -4,6 +4,7 @@ import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import { useDeleteFlashcard } from "@/features/flashcard/api/use-delete-flashcard";
 import { useToggleLike } from "@/features/likes/api/use-toggle-like";
 import { useGetSet } from "@/features/set/api/use-get-set";
+import useConfirm from "@/hooks/create-confirm-hook";
 import useCreateFlashcard from "@/hooks/create-flash-hook";
 import useCreateSet from "@/hooks/create-set-hook";
 import useCreateUpload from "@/hooks/create-upload-hook";
@@ -14,15 +15,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
-import { toast } from "sonner";
 
 const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
+  const confirm = useConfirm();
   const router = useRouter();
   const { data: set, isLoading } = useGetSet(params.setId);
   const { data: currentUser, isLoading: isLoadingUser } = useCurrentUser();
   const flashcardModal = useCreateFlashcard();
-  const { mutate: deleteFlashcard, isPending: isDeleting } =
-    useDeleteFlashcard();
+  const { isPending: isDeleting } = useDeleteFlashcard();
 
   const setModal = useCreateSet();
   const uploadModal = useCreateUpload();
@@ -79,22 +79,22 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     });
     flashcardModal.toggle();
   };
-  const handleDeleteFlashcard = () => {
-    if (currentCard - 1 < 0 || currentCard - 1 > flashcards?.length) return;
-    const currentFlashcard = flashcards?.[currentCard - 1];
-    if (!currentFlashcard) return;
-    deleteFlashcard(
-      { flashCardId: currentFlashcard._id },
-      {
-        onSuccess: () => {
-          toast.success("Flashcard deleted");
-        },
-        onError: () => {
-          toast.error("Failed to delete flashcard");
-        },
-      }
-    );
-  };
+  // const handleDeleteFlashcard = () => {
+  //   if (currentCard - 1 < 0 || currentCard - 1 > flashcards?.length) return;
+  //   const currentFlashcard = flashcards?.[currentCard - 1];
+  //   if (!currentFlashcard) return;
+  //   deleteFlashcard(
+  //     { flashCardId: currentFlashcard._id },
+  //     {
+  //       onSuccess: () => {
+  //         toast.success("Flashcard deleted");
+  //       },
+  //       onError: () => {
+  //         toast.error("Failed to delete flashcard");
+  //       },
+  //     }
+  //   );
+  // };
   useEffect(() => {
     // Don't add the event listener if the modal is open
     if (flashcardModal.isOn) return;
@@ -148,7 +148,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
 
   const [currentCard, setCurrentCard] = useState(1);
 
-  if (!set && !isLoading) router.push("/user/current");
+  // if (!set && !isLoading) router.push("/user/current");
 
   const handleEdit = () => {
     setModal.setMany({
@@ -209,7 +209,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
           cards={cards || []}
           currentCardFlipRef={flipRef}
           forwardRef={forwardRef}
-          onCardChange={(id, index) => setCurrentCard(index)}
+          onCardChange={(_id, index) => setCurrentCard(index)}
           FlashcardArrayStyle={{
             minWidth: "100%",
             // width: "80%",
@@ -232,7 +232,10 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
         </button>
         <button
           className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-          onClick={handleDeleteFlashcard}
+          onClick={() => {
+            confirm.setDeleting(true);
+            confirm.setId(flashcards?.[currentCard - 1]?._id);
+          }}
           disabled={isDeleting}
         >
           Remove Card

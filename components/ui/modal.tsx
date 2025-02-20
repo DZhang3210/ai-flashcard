@@ -13,6 +13,7 @@ type ModalProps = {
   onClose: () => void;
   children: React.ReactNode;
   light?: boolean;
+  className?: string;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -20,6 +21,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   children,
   light,
+  className,
 }) => {
   const onChange = (open: boolean) => {
     if (!open) {
@@ -32,8 +34,9 @@ export const Modal: React.FC<ModalProps> = ({
       <DialogDescription></DialogDescription>
       <DialogContent
         className={cn(
-          "py-20 m-0 overflow-y-auto",
-          light ? "bg-white text-black" : "bg-background1"
+          "py-20 m-0 overflow-y-auto max-h-[90vh]",
+          light ? "bg-white text-black" : "bg-background1",
+          className
         )}
         aria-describedby="modal"
       >

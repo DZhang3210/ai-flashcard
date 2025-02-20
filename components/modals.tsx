@@ -5,6 +5,7 @@ import React from "react";
 import SetModal from "./modals/set-modal";
 import FlashModal from "./modals/flash-modal";
 import UploadModal from "./modals/upload-modal";
+import ConfirmationModal from "./modals/confirmation-modal";
 
 const Modals = () => {
   const [mounted, setMounted] = useState(false);
@@ -17,6 +18,7 @@ const Modals = () => {
       <SetModal />
       <FlashModal />
       <UploadModal />
+      <ConfirmationModal />
     </div>
   );
 };
