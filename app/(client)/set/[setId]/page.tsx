@@ -84,7 +84,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
           <div className="flex flex-col items-center justify-center gap-4 w-full h-full">
             <h2 className="text-3xl font-bold text-font4">Congratulations!</h2>
             <p className="text-xl text-gray-600">
-              You've completed all flashcards
+              You&apos;ve completed all flashcards
             </p>
             <button
               className="px-4 py-2 bg-font4 text-white rounded-lg hover:bg-font4/80 transition-all"

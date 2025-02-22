@@ -19,7 +19,7 @@ interface ParsedData {
   [key: string]: FlashcardItem;
 }
 
-const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
+const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [base64Content, setBase64Content] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
