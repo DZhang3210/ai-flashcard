@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import { useMemo, useRef } from "react";
 import { AArrowDown, Apple, DollarSign, MoveRight, Search } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 export default function Home() {
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
@@ -61,6 +62,12 @@ export default function Home() {
       })),
     [flashcards]
   );
+
+  const { scrollYProgress } = useScroll();
+  const card1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const card2 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const card3 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const card4 = useTransform(scrollYProgress, [0, 1], [0, 200]);
   return (
     <div className="w-full min-h-[calc(100vh-100px)] bg-background1 flex flex-col gap-20 py-10">
       <div className="max-w-7xl mx-auto w-full">
@@ -97,42 +104,64 @@ export default function Home() {
           <div className="w-full h-[2px] bg-font3" />
           <h1 className="text-4xl font-bold">Benefits</h1>
           <div className="w-full h-[2px] bg-font3" />
-          <div className="grid grid-cols-4 mt-5">
-            <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">Easy to Use</h1>
-              <p className="text-gray-600">
-                Our flashcards are easy to use and can be created in seconds
-                with AI.
-              </p>
-              <AArrowDown className="w-8 h-8 text-font3" />
+          <div className="flex flex-col  gap-5 mt-5">
+            <div className="flex flex-col w-full justify-end items-end">
+              <motion.div
+                className="flex flex-col space-y-2"
+                style={{ x: card1 }}
+              >
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Easy to Use
+                </h1>
+                <p className="text-gray-600">
+                  Our flashcards are easy to use and can be created in seconds
+                  with AI.
+                </p>
+                <AArrowDown className="w-8 h-8 text-font3" />
+              </motion.div>
             </div>
-            <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">
-                Completely Free
-              </h1>
-              <p className="text-gray-600">
-                Our flashcards are completely free to use. No subscription
-                required.
-              </p>
-              <DollarSign className="w-8 h-8 text-font3" />
+            <div className="flex flex-col w-full justify-end items-start">
+              <motion.div
+                className="flex flex-col space-y-2"
+                style={{ x: card2 }}
+              >
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Completely Free
+                </h1>
+                <p className="text-gray-600">
+                  Our flashcards are completely free to use. No subscription
+                  required.
+                </p>
+                <DollarSign className="w-8 h-8 text-font3" />
+              </motion.div>
             </div>
-            <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">
-                Share your flashcards
-              </h1>
-              <p className="text-gray-600">
-                Search and find flashcards created by other users.
-              </p>
-              <Search className="w-8 h-8 text-font3" />
+            <div className="flex flex-col w-full justify-end items-end">
+              <motion.div
+                className="flex flex-col space-y-2"
+                style={{ x: card3 }}
+              >
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Share your flashcards
+                </h1>
+                <p className="text-gray-600">
+                  Search and find flashcards created by other users.
+                </p>
+                <Search className="w-8 h-8 text-font3" />
+              </motion.div>
             </div>
-            <div className="flex flex-col space-y-2">
-              <h1 className="text-2xl font-bold text-gray-800">
-                Customize your flashcards
-              </h1>
-              <p className="text-gray-600">
-                Make your flashcards unique with your own images and colors.
-              </p>
-              <Apple className="w-8 h-8 text-font3" />
+            <div className="flex flex-col w-full justify-end items-start">
+              <motion.div
+                className="flex flex-col space-y-2"
+                style={{ x: card4 }}
+              >
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Customize your flashcards
+                </h1>
+                <p className="text-gray-600">
+                  Make your flashcards unique with your own images and colors.
+                </p>
+                <Apple className="w-8 h-8 text-font3" />
+              </motion.div>
             </div>
           </div>
         </div>

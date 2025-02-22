@@ -11,7 +11,7 @@ interface Set {
 const useCreateUpload = create<Set>((set) => ({
   isOn: false,
   setId: null,
-  setOn: (setId: Id<"sets">) => set({ setId, isOn: true }),
+  setOn: (setId: Id<"sets">) => set({ isOn: true, setId }),
   setOff: () => set({ isOn: false, setId: null }),
 }));
 

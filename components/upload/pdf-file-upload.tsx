@@ -25,6 +25,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { mutate: createFlashcard } = useCreateFlashcard();
   const [prompt, setPrompt] = useState("");
+  const [parsedData, setParsedData] = useState<ParsedData | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -45,7 +46,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
       try {
         const payload = {
           pdfBase64: base64Content,
-          question: process.env.NEXT_PUBLIC_AI_PROMPT,
+          question: process.env.NEXT_PUBLIC_AI_PROMPT + prompt,
         };
         console.log("payload", payload);
         const response = await fetch("/api/fileUpload", {
@@ -58,12 +59,14 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
 
         console.log("response", response);
         const data = await response.json();
-        const parsedData = JSON.parse(data.message) as ParsedData;
-        console.log("parsedData", parsedData);
+        const tempParsedData = JSON.parse(data.message) as ParsedData;
+        console.log("parsedData", tempParsedData);
+        setParsedData(tempParsedData);
 
+        // if (!parsedData) return;
         // Convert object to array of flashcard items
         await Promise.all(
-          Object.values(parsedData).map((item) =>
+          Object.values(tempParsedData).map((item) =>
             createFlashcard({
               front: item.question,
               back: item.answer,
@@ -72,7 +75,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
           )
         );
         toast.success("Flashcards created successfully");
-        onClose();
+        // onClose();
         // setResponse(data.message);
       } catch (error) {
         console.error("Error parsing or creating flashcards:", error);
@@ -106,13 +109,24 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
           {response ? response : "Click submit to get a response"}
         </p> */}
       </label>
-      <Input
-        type="text"
-        placeholder="What kind of flashcards do you want to create?"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        className="max-w-md border-2 border-font4 rounded-lg"
-      />
+      {isLoading ? (
+        <div className="flex items-center justify-center gap-2 h-10 w-full max-w-md">
+          <div className="flex gap-1">
+            <div className="w-2 h-2 rounded-full bg-font3 animate-[bounce_1s_infinite_100ms]" />
+            <div className="w-2 h-2 rounded-full bg-font3 animate-[bounce_1s_infinite_200ms]" />
+            <div className="w-2 h-2 rounded-full bg-font3 animate-[bounce_1s_infinite_300ms]" />
+          </div>
+          <span className="text-font3">Processing PDF...</span>
+        </div>
+      ) : (
+        <Input
+          type="text"
+          placeholder="What kind of flashcards do you want to create?"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="max-w-md border-2 border-font4 rounded-lg"
+        />
+      )}
       <div className="flex flex-row items-center justify-center gap-1 w-full">
         <button
           className="w-full bg-font3 text-background1 p-2 rounded-md hover:bg-font3/80 transition-all duration-100 grow"
@@ -122,6 +136,24 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
           {isLoading ? "Loading..." : "Submit File"}
         </button>
       </div>
+      {parsedData && (
+        <div className="w-full flex flex-col gap-4">
+          <h1 className="text-xl font-bold text-font2 text-center">
+            New Flashcards
+          </h1>
+          {Object.values(parsedData).map((item) => (
+            <div
+              key={item.question}
+              className="grid grid-cols-10 gap-2 border-b border-gray-400"
+            >
+              <div className="text-sm font-bold col-span-3">
+                {item.question}
+              </div>
+              <div className="text-sm col-span-7">{item.answer}</div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* <button
         onClick={handleSubmit}
