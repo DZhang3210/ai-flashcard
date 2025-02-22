@@ -1,6 +1,7 @@
 "use client";
 import { Id } from "@/convex/_generated/dataModel";
 import { useCreateFlashcard } from "@/features/flashcard/api/use-create-flashcard";
+import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
   const [base64Content, setBase64Content] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const { mutate: createFlashcard } = useCreateFlashcard();
+  const [prompt, setPrompt] = useState("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -104,6 +106,13 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
           {response ? response : "Click submit to get a response"}
         </p> */}
       </label>
+      <Input
+        type="text"
+        placeholder="What kind of flashcards do you want to create?"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        className="max-w-md border-2 border-font4 rounded-lg"
+      />
       <div className="flex flex-row items-center justify-center gap-1 w-full">
         <button
           className="w-full bg-font3 text-background1 p-2 rounded-md hover:bg-font3/80 transition-all duration-100 grow"
@@ -113,6 +122,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId, onClose }) => {
           {isLoading ? "Loading..." : "Submit File"}
         </button>
       </div>
+
       {/* <button
         onClick={handleSubmit}
         disabled={isLoading || !prompt}

@@ -187,14 +187,14 @@ export const getAll = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      return {
-        page: [],
-        isDone: true,
-        continueCursor: "",
-      };
-    }
+    // const userId = await auth.getUserId(ctx);
+    // if (!userId) {
+    //   return {
+    //     page: [],
+    //     isDone: true,
+    //     continueCursor: "",
+    //   };
+    // }
 
     const keyword = args.keyword ? args.keyword?.trim()?.length > 0 : false;
 
@@ -214,23 +214,22 @@ export const getAll = query({
       page: (
         await Promise.all(
           data.page.map(async (item) => {
-            const [creator, thumbnail, isLiked] = await Promise.all([
+            const [creator, thumbnail] = await Promise.all([
               ctx.db.get(item.creator),
               item.thumbnail ? await ctx.storage.getUrl(item.thumbnail) : null,
-              ctx.db
-                .query("likes")
-                .withIndex("user_set", (q) =>
-                  q.eq("user", userId).eq("set", item._id)
-                )
-                .first(),
+              // ctx.db
+              //   .query("likes")
+              //   .withIndex("user_set", (q) =>
+              //     q.eq("user", userId).eq("set", item._id)
+              //   )
+              //   .first(),
             ]);
-            if (!creator || item.creator === userId || item.numFlashcards <= 0)
-              return null;
+            if (!creator || item.numFlashcards <= 0) return null;
             return {
               ...item,
               creator,
               thumbnail,
-              isLiked: isLiked !== null,
+              // isLiked: isLiked !== null,
             };
           })
         )
@@ -246,10 +245,10 @@ export const getById = query({
     setId: v.id("sets"),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      return null;
-    }
+    // const userId = await auth.getUserId(ctx);
+    // if (!userId) {
+    //   return null;
+    // }
     const [flashcards, set] = await Promise.all([
       ctx.db
         .query("flashcards")
@@ -258,21 +257,21 @@ export const getById = query({
       ctx.db.get(args.setId),
     ]);
 
-    const [user, thumbnail, isLiked] = await Promise.all([
+    const [user, thumbnail] = await Promise.all([
       ctx.db.get(set?.creator as Id<"users">),
       set?.thumbnail ? await ctx.storage.getUrl(set.thumbnail) : null,
-      ctx.db
-        .query("likes")
-        .withIndex("user_set", (q) =>
-          q.eq("user", userId).eq("set", args.setId)
-        )
-        .first(),
+      // ctx.db
+      // .query("likes")
+      // .withIndex("user_set", (q) =>
+      //   q.eq("user", userId).eq("set", args.setId)
+      // )
+      // .first(),
     ]);
 
     return {
       ...set,
       creator: user,
-      isLiked: isLiked !== null,
+      // isLiked: isLiked !== null,
       thumbnail,
       flashcards,
     };

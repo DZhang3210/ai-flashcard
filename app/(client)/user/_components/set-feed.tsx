@@ -14,6 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEffect } from "react";
 
 const SetFeed = ({
   sets,
@@ -25,6 +26,16 @@ const SetFeed = ({
   setSearch: (search: string) => void;
   toggleCreate?: boolean;
 }) => {
+  const [inputValue, setInputValue] = React.useState(search);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(inputValue);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [inputValue, setSearch]);
+
   return (
     <div className="flex flex-col gap-4 mt-6">
       <div className="rounded-3xl  ">
@@ -35,8 +46,8 @@ const SetFeed = ({
           Search By Name <Search className="w-6 h-6" />
         </Label>
         <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           type="email"
           className="h-10 text-xl border-0 border-b border-gray-400 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
           required
@@ -96,7 +107,7 @@ const FeedItem = ({ set }: { set: SetWithCreator }) => {
               }}
               disabled={togglingLike}
             >
-              {set.isLiked ? (
+              {/* {set.isLiked ? (
                 <div className="rounded-sm border border-blue-400 bg-blue-400 px-2 text-white hover:scale-[105%] transition">
                   Liked
                 </div>
@@ -104,7 +115,7 @@ const FeedItem = ({ set }: { set: SetWithCreator }) => {
                 <div className="rounded-sm border border-black/60 px-2 hover:scale-[105%] transition">
                   like
                 </div>
-              )}
+              )} */}
             </button>
           </p>
           <p className="text-xs text-gray-500">

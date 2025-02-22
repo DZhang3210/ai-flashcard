@@ -1,15 +1,16 @@
 "use client";
+import SetDrawer from "@/components/set-drawer";
 import { Id } from "@/convex/_generated/dataModel";
 import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import { useDeleteFlashcard } from "@/features/flashcard/api/use-delete-flashcard";
-import { useToggleLike } from "@/features/likes/api/use-toggle-like";
 import { useGetSet } from "@/features/set/api/use-get-set";
 import useConfirm from "@/hooks/create-confirm-hook";
 import useCreateFlashcard from "@/hooks/create-flash-hook";
 import useCreateSet from "@/hooks/create-set-hook";
 import useCreateUpload from "@/hooks/create-upload-hook";
 import { cn } from "@/lib/utils";
-import { Edit, Heart } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -79,27 +80,28 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     });
     flashcardModal.toggle();
   };
-  // const handleDeleteFlashcard = () => {
-  //   if (currentCard - 1 < 0 || currentCard - 1 > flashcards?.length) return;
-  //   const currentFlashcard = flashcards?.[currentCard - 1];
-  //   if (!currentFlashcard) return;
-  //   deleteFlashcard(
-  //     { flashCardId: currentFlashcard._id },
-  //     {
-  //       onSuccess: () => {
-  //         toast.success("Flashcard deleted");
-  //       },
-  //       onError: () => {
-  //         toast.error("Failed to delete flashcard");
-  //       },
-  //     }
-  //   );
-  // };
+  const handleAddFlashcard = () => {
+    flashcardModal.setMany({
+      editMode: false,
+      front: "",
+      back: "",
+    });
+    flashcardModal.toggle();
+  };
+
   useEffect(() => {
     // Don't add the event listener if the modal is open
     if (flashcardModal.isOn) return;
 
     const handleKeyPress = (event: KeyboardEvent) => {
+      if (
+        flashcardModal.isOn ||
+        isLoading ||
+        isLoadingUser ||
+        !set ||
+        uploadModal.isOn
+      )
+        return;
       if (event.code === "Space") {
         event.preventDefault();
         flipRef.current?.();
@@ -160,33 +162,50 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     });
     setModal.setOn();
   };
-  const { mutate: toggleLike, isPending: togglingLike } = useToggleLike();
+  useEffect(() => {
+    if (flashcardModal.isOn) {
+      flashcardModal.setOff();
+    }
+  }, []);
 
   return (
-    <div className="flex flex-col items-center p-10 h-[calc(100vh-100px)] w-full max-w-3xl mx-auto">
-      <div className="flex flex-row items-center justify-between mb-5 gap-4 w-full">
-        <div className="flex flex-row items-center justify-center gap-4">
-          <Image
-            src={set?.thumbnail ?? "/nijika-image.jpg"}
-            alt={"Set Image"}
-            width={100}
-            height={100}
-            className="rounded-lg"
-          />
-          <div className="flex flex-col items-start justify-start">
-            <h1 className="text-4xl font-bold text-gray-700">{set?.name}</h1>
-            <p className="text-lg text-gray-500">{set?.description}</p>
+    <div
+      className={cn(
+        "grid grid-cols-8 items-center p-2 h-[calc(100vh-100px)] w-full  mx-auto border-2 border-red-500 gap-0",
+        flashcardModal.isOn ? "max-w-6xl" : "max-w-3xl"
+      )}
+    >
+      <div
+        className={cn(
+          "flex flex-col items-center p-5 h-[calc(100vh-100px)] w-full border-2 border-blue-500",
+          flashcardModal.isOn ? "col-span-5" : "col-span-8"
+        )}
+      >
+        <div className="flex flex-row items-center justify-between mb-5 gap-4 w-full">
+          <div className="flex flex-row items-center justify-center gap-4">
+            <Image
+              src={set?.thumbnail ?? "/nijika-image.jpg"}
+              alt={"Set Image"}
+              width={100}
+              height={100}
+              className="rounded-lg"
+            />
+            <div className="flex flex-col items-start justify-start">
+              <h1 className="text-4xl font-bold text-gray-700">{set?.name}</h1>
+              <p className="text-lg text-gray-500">{set?.description}</p>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center justify-center gap-2">
-          <button
-            onClick={handleEdit}
-            className="text-font4 text-xl flex flex-row items-center gap-2 px-4 py-2 rounded-lg hover:bg-font4/20 transition-all duration-100 border border-font4"
-          >
-            Edit
-            <Edit className="w-6 h-6" />
-          </button>
-          <button
+          <div className="flex items-center justify-center gap-2">
+            {set?.creator?._id === currentUser?._id && (
+              <button
+                onClick={handleEdit}
+                className="text-font4 text-xl flex flex-row items-center gap-2 px-4 py-2 rounded-lg hover:bg-font4/20 transition-all duration-100 border border-font4"
+              >
+                Edit
+                <Edit className="w-6 h-6" />
+              </button>
+            )}
+            {/* <button
             className={cn(
               "font-normal text-xl  right-0 z-50 px-4 py-2 rounded-lg hover:bg-font2/20 transition-all duration-100 border border-gray-300 flex flex-row items-center gap-2",
               set?.isLiked &&
@@ -201,58 +220,66 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
           >
             {set?.isLiked ? "Liked" : "Like"}
             <Heart className="w-6 h-6" />
+          </button> */}
+          </div>
+        </div>
+        <div className="flex w-full items-center justify-center">
+          <FlashcardArray
+            cards={cards || []}
+            currentCardFlipRef={flipRef}
+            forwardRef={forwardRef}
+            onCardChange={(_id, index) => setCurrentCard(index)}
+            FlashcardArrayStyle={{
+              minWidth: "100%",
+              // width: "80%",
+              padding: "0 1%",
+            }}
+          />
+        </div>
+        <div className="grid grid-cols-4 gap-4 w-full max-w-6xl">
+          <button
+            className="bg-gray-100 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+            onClick={handleEditFlashcard}
+          >
+            Edit Card
+          </button>
+          <button
+            className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+            onClick={handleAddFlashcard}
+          >
+            Add Card
+          </button>
+          <button
+            className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+            onClick={() => {
+              confirm.setDeleting(true);
+              confirm.setId(flashcards?.[currentCard - 1]?._id);
+            }}
+            disabled={isDeleting}
+          >
+            Remove Card
+          </button>
+          <button
+            className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+            onClick={() => uploadModal.setOn(params.setId)}
+          >
+            Upload
           </button>
         </div>
+        <Link
+          href={`/user/${set?.creator?._id}`}
+          className="text-sm text-gray-500 w-full max-w-6xl mx-auto text-center hover:underline"
+        >
+          Made by {set?.creator?.name}
+        </Link>
       </div>
-      <div className="flex w-full items-center justify-center">
-        <FlashcardArray
-          cards={cards || []}
-          currentCardFlipRef={flipRef}
-          forwardRef={forwardRef}
-          onCardChange={(_id, index) => setCurrentCard(index)}
-          FlashcardArrayStyle={{
-            minWidth: "100%",
-            // width: "80%",
-            padding: "0 1%",
-          }}
-        />
-      </div>
-      <div className="grid grid-cols-4 gap-4 w-full max-w-6xl">
-        <button
-          className="bg-gray-100 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-          onClick={handleEditFlashcard}
-        >
-          Edit Card
-        </button>
-        <button
-          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-          onClick={() => flashcardModal.setOn({ setId: params.setId })}
-        >
-          Add Card
-        </button>
-        <button
-          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-          onClick={() => {
-            confirm.setDeleting(true);
-            confirm.setId(flashcards?.[currentCard - 1]?._id);
-          }}
-          disabled={isDeleting}
-        >
-          Remove Card
-        </button>
-        <button
-          className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-          onClick={() => uploadModal.setOn(params.setId)}
-        >
-          Upload
-        </button>
-      </div>
-      <Link
-        href={`/user/${set?.creator?._id}`}
-        className="text-sm text-gray-500 w-full max-w-6xl mx-auto text-center hover:underline"
-      >
-        Made by {set?.creator?.name}
-      </Link>
+      <AnimatePresence>
+        {flashcardModal.isOn && (
+          <div className="col-span-3 w-full h-full" key={flashcardModal.id}>
+            <SetDrawer />
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

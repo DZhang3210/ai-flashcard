@@ -14,7 +14,7 @@ import { SignInFlow } from "./types";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { TriangleAlert } from "lucide-react";
 import { Label } from "../ui/label";
-
+import Link from "next/link";
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void;
 }
@@ -53,10 +53,12 @@ const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
   return (
     <Card className="w-full h-full p-8 bg-background1 text-black border-none shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-5xl w-full text-center">Sign In</CardTitle>
-        <CardDescription className="text-font4 text-3xl text-center border-2 rounded-full px-4 py-1 w-fit mx-auto border-font4">
-          Recall IQ
-        </CardDescription>
+        <CardTitle className="text-5xl w-full text-center">Sign Up</CardTitle>
+        <Link href="/">
+          <CardDescription className="text-font4 text-3xl text-center border-2 rounded-full px-4 py-1 w-fit mx-auto border-font4 hover:bg-font4 hover:text-white transition duration-300 cursor-pointer">
+            Recall IQ
+          </CardDescription>
+        </Link>
       </CardHeader>
       {!!error && (
         <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
