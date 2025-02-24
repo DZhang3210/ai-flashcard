@@ -48,9 +48,9 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
   return (
     <Card className="w-full h-full p-8 bg-background1 text-black border-none shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-5xl w-full text-center">Welcome</CardTitle>
+        <CardTitle className="text-4xl w-full text-center">Welcome</CardTitle>
         <Link href="/">
-          <CardDescription className="text-font4 text-3xl text-center border-2 rounded-full px-4 py-1 w-fit mx-auto border-font4 hover:bg-font4 hover:text-white transition duration-300 cursor-pointer">
+          <CardDescription className="text-font4 text-xl text-center border-2 rounded-full px-4 py-1 w-fit mx-auto border-font4 hover:bg-font4 hover:text-white transition duration-300 cursor-pointer">
             Recall IQ
           </CardDescription>
         </Link>
@@ -64,7 +64,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
       <CardContent className="space-y-5 px-0 pb-0">
         <form className="space-y-8" onSubmit={onPasswordSignIn}>
           <div className="flex flex-col gap-y-1">
-            <Label className="text-lg uppercase" htmlFor="email">
+            <Label className="text-base uppercase" htmlFor="email">
               Email Address
             </Label>
             <Input
@@ -78,7 +78,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
             />
           </div>
           <div className="flex flex-col gap-y-1">
-            <Label className="text-lg uppercase" htmlFor="password">
+            <Label className="text-base uppercase" htmlFor="password">
               Password
             </Label>
             <Input
@@ -86,14 +86,14 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
-              className="h-10 text-xl border-0 border-b border-gray-300 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
+              className="h-10 text-base border-0 border-b border-gray-300 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visble: outline-none focus-visible:border-black transition-all duration-100"
               required
               name="password"
             />
           </div>
           <Button
             type="submit"
-            className="w-full bg-black text-white hover:bg-black/60 text-xl font-semibold"
+            className="w-full bg-black text-white hover:bg-black/60 text-base font-semibold"
             size="lg"
             disabled={pending}
             aria-label="submit button"
@@ -112,10 +112,10 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
             onClick={() => handleProviderSignIn("google")}
             variant="outline"
             size="lg"
-            className="w-full flex items-center justify-center text-xl"
+            className="w-full flex items-center justify-center text-base"
             aria-label="google button"
           >
-            <FaGoogle className="text" />
+            <FaGoogle className="text-2xl" />
             Google
           </Button>
           <Button
@@ -123,14 +123,14 @@ const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
             onClick={() => handleProviderSignIn("github")}
             variant="outline"
             size="lg"
-            className="w-full flex items-center justify-center text-xl"
+            className="w-full flex items-center justify-center text-base"
             aria-label="github button"
           >
-            <FaGithub className="text-xl" />
+            <FaGithub className="text-2xl" />
             Github
           </Button>
         </div>
-        <p className="text-base text-gray-600">
+        <p className="text-sm text-gray-600">
           Don&apos;t have an account?{" "}
           <span
             className="text-sky-700 hover:underline cursor-pointer"

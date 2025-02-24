@@ -28,7 +28,7 @@ const UserButton = () => {
   if (!data) {
     return (
       <Link href="/auth">
-        <button className="border-2 border-font3 rounded-full px-6 py-2 hover:bg-font3 text-font3 transition duration-300 hover:text-white text-2xl">
+        <button className="border-2 border-font3 rounded-full px-6 py-1 hover:bg-font3 text-font3 transition duration-300 hover:text-white text-lg">
           Sign in
         </button>
       </Link>
@@ -46,7 +46,7 @@ const UserButton = () => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="outline-none relative">
-        <Avatar className="size-[60px] hover:opacity-75 transition border-2 border-font3 hover:border-transparent">
+        <Avatar className="size-[50px] hover:opacity-75 transition border-2 border-font3 hover:border-transparent">
           <AvatarFallback className="text-font3 text-xl hover:bg-font3 transition hover:text-white">
             {avatarFallback}
           </AvatarFallback>

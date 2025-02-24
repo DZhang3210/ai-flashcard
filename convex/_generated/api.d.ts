@@ -17,7 +17,10 @@ import type * as auth from "../auth.js";
 import type * as flashcard from "../flashcard.js";
 import type * as http from "../http.js";
 import type * as likes from "../likes.js";
+import type * as orders from "../orders.js";
+import type * as products from "../products.js";
 import type * as set from "../set.js";
+import type * as subscription from "../subscription.js";
 import type * as upload from "../upload.js";
 import type * as users from "../users.js";
 
@@ -34,7 +37,10 @@ declare const fullApi: ApiFromModules<{
   flashcard: typeof flashcard;
   http: typeof http;
   likes: typeof likes;
+  orders: typeof orders;
+  products: typeof products;
   set: typeof set;
+  subscription: typeof subscription;
   upload: typeof upload;
   users: typeof users;
 }>;

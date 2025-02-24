@@ -22,7 +22,7 @@ export default function Navbar() {
   const createSet = useCreateSet();
   const { data: user } = useCurrentUser();
   return (
-    <nav className="bg-background1 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10">
+    <nav className="bg-background2 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10">
       <Link href="/" className="hidden md:block">
         <div
           className={cn(
@@ -30,13 +30,13 @@ export default function Navbar() {
             pathname === "/" && "bg-font4 text-white"
           )}
         >
-          <h1 className="text-3xl font-bold hidden md:block ">Recall IQ </h1>
+          <h1 className="text-xl font-bold hidden md:block ">Recall IQ </h1>
         </div>
       </Link>
       <Link
         href="/explore"
         className={cn(
-          "hidden md:block border-2 rounded-full border-font1 text-font1 px-6 py-2 hover:bg-font1 transition duration-300 hover:text-white text-2xl",
+          "hidden md:block border-2 rounded-full border-font1 text-font1 px-6 py-1 hover:bg-font1 transition duration-300 hover:text-white text-lg",
           pathname === "/explore" && "bg-font1 text-white"
         )}
       >
@@ -49,7 +49,7 @@ export default function Navbar() {
       <div className="flex items-center space-x-8">
         <button
           onClick={createSetAction}
-          className="text-font2 text-2xl px-6 py-2 border-2 border-font2 rounded-full hover:bg-font2 hover:text-white transition-all duration-300 relative"
+          className="text-font2 text-lg  px-6 py-1 border-2 border-font2 rounded-full hover:bg-font2 hover:text-white transition-all duration-300 relative"
         >
           Create Set <br />
           {user == null && (

@@ -45,6 +45,29 @@ const schema = defineSchema({
     .index("user", ["user"])
     .index("set", ["set"])
     .index("user_set", ["user", "set"]),
+  subscriptions: defineTable({
+    user: v.id("users"),
+    expiresAt: v.number(),
+    stripeCustomerId: v.optional(v.string()),
+    stripeSubscriptionId: v.optional(v.string()),
+    stripePriceId: v.optional(v.string()),
+    stripeCurrentPeriodEnd: v.optional(v.number()),
+  }).index("user", ["user"]),
+  products: defineTable({
+    name: v.string(),
+    description: v.string(),
+    price: v.number(),
+    image: v.optional(v.string()),
+    stripeProductId: v.optional(v.string()),
+  }).index("stripeProductId", ["stripeProductId"]),
+  orders: defineTable({
+    productId: v.id("products"),
+    userId: v.id("users"),
+    pricePaidInCents: v.number(),
+    createdAt: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("productId", ["productId"]),
 });
 
 export default schema;
