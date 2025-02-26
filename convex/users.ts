@@ -1,14 +1,18 @@
 import { auth } from "./auth";
 import { query } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 export const current = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (userId === null) return null;
+    const identity = await ctx.auth.getUserIdentity();
 
-    return await ctx.db.get(userId);
+    if (identity === null) return null;
+
+    return await ctx.db.get(
+      identity.tokenIdentifier.split("|")[1] as Id<"users">
+    );
   },
 });
 

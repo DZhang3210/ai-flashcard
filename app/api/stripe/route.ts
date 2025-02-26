@@ -3,19 +3,20 @@ import { absoluteUrl } from "@/lib/utils";
 import { api } from "@/convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
 import { stripe } from "@/lib/stripe";
-
-const settingUrl = absoluteUrl("/settings");
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+const settingUrl = absoluteUrl("/");
 
 export async function GET() {
   try {
-    const user = await fetchQuery(api.users.current);
+    const token = await convexAuthNextjsToken();
+    const user = await fetchQuery(api.users.current, {}, { token });
 
     if (!user) {
       return new NextResponse("Unathorized", { status: 401 });
     }
 
     const userSubscription = await fetchQuery(api.subscription.getByUserId, {
-      userId: user?._id,
+      userId: user._id,
     });
 
     if (userSubscription && userSubscription.stripeCustomerId) {
@@ -38,7 +39,7 @@ export async function GET() {
             currency: "USD",
 
             product_data: {
-              name: "Genius Pro",
+              name: "Recall-AI",
               description: "Unlimited AI Generations",
             },
             unit_amount: 2000,
@@ -51,6 +52,7 @@ export async function GET() {
       ],
       metadata: {
         userId: user._id,
+        productId: "",
       },
     });
     return new NextResponse(JSON.stringify({ url: stripeSession.url }));

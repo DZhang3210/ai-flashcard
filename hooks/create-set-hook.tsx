@@ -1,7 +1,7 @@
 import { Id } from "@/convex/_generated/dataModel";
 import { create } from "zustand";
 
-interface Set {
+export interface Set {
   isOn: boolean;
   editMode: boolean;
   id: Id<"sets"> | null;

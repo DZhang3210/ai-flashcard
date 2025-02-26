@@ -10,6 +10,7 @@ const isPublicPage = createRouteMatcher([
   "/auth",
   "/set/:setId",
   "/explore",
+  "/webhook/stripe",
 ]);
 const isSignInPage = createRouteMatcher(["/auth"]);
 

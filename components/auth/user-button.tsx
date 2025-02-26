@@ -18,7 +18,6 @@ const UserButton = () => {
   const { signOut } = useAuthActions();
   const { data, isLoading } = useCurrentUser();
 
-  // console.log("USER", data?.image);
   if (isLoading) {
     return (
       <div className="size-[60px] hover:opacity-75 transition animate-pulse rounded-full bg-muted-foreground"></div>
