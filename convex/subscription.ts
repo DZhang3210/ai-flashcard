@@ -20,10 +20,8 @@ const DAY_IN_MS = 1000 * 60 * 60 * 24;
 export const create = mutation({
   args: {
     userId: v.id("users"),
-    stripeCustomerId: v.string(),
-    stripeSubscriptionId: v.string(),
-    stripePriceId: v.string(),
-    stripeCurrentPeriodEnd: v.number(),
+    receiptUrl: v.string(),
+    currentPeriodEnd: v.number(),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -41,11 +39,8 @@ export const create = mutation({
 
     await ctx.db.insert("subscriptions", {
       user: userId,
-      expiresAt: args.stripeCurrentPeriodEnd + DAY_IN_MS,
-      stripeCustomerId: args.stripeCustomerId,
-      stripeSubscriptionId: args.stripeSubscriptionId,
-      stripePriceId: args.stripePriceId,
-      stripeCurrentPeriodEnd: args.stripeCurrentPeriodEnd,
+      expiresAt: Date.now() + args.currentPeriodEnd,
+      receiptUrl: args.receiptUrl,
     });
   },
 });
@@ -53,10 +48,8 @@ export const create = mutation({
 export const update = mutation({
   args: {
     userId: v.id("users"),
-    stripeCustomerId: v.optional(v.string()),
-    stripeSubscriptionId: v.optional(v.string()),
-    stripePriceId: v.optional(v.string()),
-    stripeCurrentPeriodEnd: v.optional(v.number()),
+    receiptUrl: v.string(),
+    extraTime: v.number(),
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx);
@@ -69,17 +62,18 @@ export const update = mutation({
       .withIndex("user", (q) => q.eq("user", userId))
       .first();
     if (!existingSubscription) {
-      throw new Error("Subscription not found");
+      const subscriptionId = await ctx.db.insert("subscriptions", {
+        user: userId,
+        expiresAt: Date.now() + args.extraTime * 1000,
+        receiptUrl: args.receiptUrl,
+      });
+      return subscriptionId;
+    } else {
+      const subscriptionId = await ctx.db.patch(existingSubscription._id, {
+        receiptUrl: args.receiptUrl,
+        expiresAt: Date.now() + args.extraTime * 1000,
+      });
+      return subscriptionId;
     }
-
-    await ctx.db.patch(existingSubscription._id, {
-      stripeCustomerId: args.stripeCustomerId,
-      stripeSubscriptionId:
-        args.stripeSubscriptionId || existingSubscription.stripeSubscriptionId,
-      stripePriceId: args.stripePriceId || existingSubscription.stripePriceId,
-      stripeCurrentPeriodEnd:
-        args.stripeCurrentPeriodEnd ||
-        existingSubscription.stripeCurrentPeriodEnd,
-    });
   },
 });

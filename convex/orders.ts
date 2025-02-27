@@ -29,16 +29,13 @@ export const create = mutation({
   args: {
     productId: v.id("products"),
     pricePaidInCents: v.number(),
+    userId: v.id("users"),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
-    if (!userId) {
-      throw new Error("Unauthorized");
-    }
     await ctx.db.insert("orders", {
       productId: args.productId,
       pricePaidInCents: args.pricePaidInCents,
-      userId: userId,
+      userId: args.userId,
       createdAt: Date.now(),
     });
   },

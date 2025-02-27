@@ -48,10 +48,7 @@ const schema = defineSchema({
   subscriptions: defineTable({
     user: v.id("users"),
     expiresAt: v.number(),
-    stripeCustomerId: v.optional(v.string()),
-    stripeSubscriptionId: v.optional(v.string()),
-    stripePriceId: v.optional(v.string()),
-    stripeCurrentPeriodEnd: v.optional(v.number()),
+    receiptUrl: v.optional(v.string()),
   }).index("user", ["user"]),
   products: defineTable({
     name: v.string(),
