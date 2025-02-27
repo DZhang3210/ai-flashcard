@@ -57,8 +57,9 @@ const schema = defineSchema({
     name: v.string(),
     description: v.string(),
     price: v.number(),
-    image: v.optional(v.string()),
+    image: v.optional(v.id("_storage")),
     stripeProductId: v.optional(v.string()),
+    additionalTime: v.number(),
   }).index("stripeProductId", ["stripeProductId"]),
   orders: defineTable({
     productId: v.id("products"),

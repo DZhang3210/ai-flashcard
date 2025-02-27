@@ -24,3 +24,15 @@ export const getById = query({
     return await ctx.db.get(userId);
   },
 });
+
+export const isAdmin = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) return false;
+    const user = await ctx.db.get(
+      identity.tokenIdentifier.split("|")[1] as Id<"users">
+    );
+    return user?.email === "dz2188@nyu.edu";
+  },
+});

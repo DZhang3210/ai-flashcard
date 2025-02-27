@@ -8,6 +8,7 @@ import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import Search from "./search";
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -18,11 +19,10 @@ export default function Navbar() {
       createSet.setOn();
     }
   };
-
   const createSet = useCreateSet();
   const { data: user } = useCurrentUser();
   return (
-    <nav className="bg-background2 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10">
+    <nav className="bg-background1 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10 border-b-2 border-gray-200">
       <div className="max-w-[1200px] mx-auto w-full flex items-center justify-between">
         <Link href="/" className="hidden md:block">
           <div
@@ -34,7 +34,7 @@ export default function Navbar() {
             <h1 className="text-xl font-bold hidden md:block ">Recall IQ </h1>
           </div>
         </Link>
-        <Link
+        {/* <Link
           href="/explore"
           className={cn(
             "hidden md:block border-2 rounded-full border-font1 text-font1 px-6 py-1 hover:bg-font1 transition duration-300 hover:text-white text-lg",
@@ -42,7 +42,8 @@ export default function Navbar() {
           )}
         >
           Explore
-        </Link>
+        </Link> */}
+        <Search />
         <div className="block md:hidden">
           <MobileSidebar />
         </div>

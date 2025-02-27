@@ -52,7 +52,7 @@ const FlashcardButtonResponsive = ({
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [flashcardModal.getState().isOn, uploadModal.getState().isOn]);
+  }, [flashcardModal, uploadModal, forwardRef, flipRef]);
 
   return (
     <>

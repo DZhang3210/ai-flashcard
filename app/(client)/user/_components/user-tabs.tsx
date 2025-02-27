@@ -6,17 +6,7 @@ import SetFeed from "./set-feed";
 import LikedFeed from "./liked-feed";
 import { SetWithCreator } from "@/lib/types";
 
-const UserTabs = ({
-  sets,
-  search,
-  setSearch,
-  toggleCreate = false,
-}: {
-  sets: SetWithCreator[];
-  search: string;
-  setSearch: (search: string) => void;
-  toggleCreate?: boolean;
-}) => {
+const UserTabs = ({ sets }: { sets: SetWithCreator[] }) => {
   const [tab, setTab] = useState(0);
   return (
     <div className="w-full">
@@ -43,14 +33,7 @@ const UserTabs = ({
         </button>
       </div>
       <div className="ml-5">
-        {tab === 0 && (
-          <SetFeed
-            sets={sets}
-            search={search}
-            setSearch={setSearch}
-            toggleCreate={toggleCreate}
-          />
-        )}
+        {tab === 0 && <SetFeed sets={sets} />}
         {tab === 1 && <LikedFeed />}
       </div>
     </div>

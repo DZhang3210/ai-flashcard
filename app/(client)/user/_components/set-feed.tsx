@@ -1,11 +1,9 @@
 import useCreateSet from "@/hooks/create-set-hook";
 import { SetWithCreator } from "@/lib/types";
-import { Ellipsis, Search } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import React, { useMemo } from "react";
 
 import Image from "next/image";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useToggleLike } from "@/features/likes/api/use-toggle-like";
 import { cn } from "@/lib/utils";
@@ -14,31 +12,11 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEffect } from "react";
 
-const SetFeed = ({
-  sets,
-  search,
-  setSearch,
-}: {
-  sets: SetWithCreator[];
-  search: string;
-  setSearch: (search: string) => void;
-  toggleCreate?: boolean;
-}) => {
-  const [inputValue, setInputValue] = React.useState(search);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearch(inputValue);
-    }, 400);
-
-    return () => clearTimeout(timer);
-  }, [inputValue, setSearch]);
-
+const SetFeed = ({ sets }: { sets: SetWithCreator[] }) => {
   return (
     <div className="flex flex-col gap-4 mt-6">
-      <div className="rounded-3xl  ">
+      {/* <div className="rounded-3xl  ">
         <Label
           className="text-xl uppercase flex flex-row gap-2 items-center"
           htmlFor="search"
@@ -53,7 +31,7 @@ const SetFeed = ({
           required
           name="email"
         />
-      </div>
+      </div> */}
 
       <div className=" gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {sets.map((set) => (

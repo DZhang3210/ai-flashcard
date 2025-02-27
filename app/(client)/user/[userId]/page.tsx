@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import UserTabs from "../_components/user-tabs";
 import UserProfileSkeleton from "../_skeletons/user-profile-skeleton";
 import { useGetSets } from "@/features/set/api/use-get-sets";
-import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useGetUser } from "@/features/auth/api/use-get-user";
 import { useCurrentUser } from "@/features/auth/api/use-current-user";
@@ -24,13 +23,11 @@ export default function UserProfile({
     router.push("/user/current");
   }
 
-  const [search, setSearch] = useState("");
-
   const {
     results: sets,
     status: setsStatus,
     loadMore: loadMoreSets,
-  } = useGetSets({ keyword: search, userId: userId as Id<"users"> });
+  } = useGetSets({ keyword: "", userId: userId as Id<"users"> });
 
   if (isLoading) return <UserProfileSkeleton />;
   const avatarFallback = user
@@ -63,12 +60,7 @@ export default function UserProfile({
           </div>
         </div>
 
-        <UserTabs
-          sets={sets}
-          search={search}
-          setSearch={setSearch}
-          toggleCreate={true}
-        />
+        <UserTabs sets={sets} />
         <div
           className="h-1"
           ref={(el) => {

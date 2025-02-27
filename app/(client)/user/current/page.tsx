@@ -4,18 +4,16 @@ import { useCurrentUser } from "@/features/auth/api/use-current-user";
 import UserTabs from "../_components/user-tabs";
 import UserProfileSkeleton from "../_skeletons/user-profile-skeleton";
 import { useGetSets } from "@/features/set/api/use-get-sets";
-import { useState } from "react";
 
 export default function UserProfile() {
   const { data: user, isLoading } = useCurrentUser();
   const { name, numOwned, numLiked, numLikedByOthers } = user ?? {};
-  const [search, setSearch] = useState("");
 
   const {
     results: sets,
     status: setsStatus,
     loadMore: loadMoreSets,
-  } = useGetSets({ keyword: search });
+  } = useGetSets({ keyword: "" });
 
   if (isLoading) return <UserProfileSkeleton />;
   const avatarFallback = user
@@ -58,7 +56,7 @@ export default function UserProfile() {
         </div>
 
         <div className="col-span-7">
-          <UserTabs sets={sets} search={search} setSearch={setSearch} />
+          <UserTabs sets={sets} />
           <div
             className="h-1"
             ref={(el) => {
