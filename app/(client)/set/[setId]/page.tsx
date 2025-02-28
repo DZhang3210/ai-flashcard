@@ -21,6 +21,22 @@ import FlashcardHeader from "@/components/flashcard-buttons/flashcard-header";
 import { SetWithFlashcards } from "@/lib/types";
 import { processFlashcards } from "@/lib/process-flashcards";
 
+const formatFlashcardsForAnki = (
+  flashcards: Array<{ front: string; back: string }>
+) => {
+  return flashcards.map((card) => `${card.front};${card.back}`).join("\n");
+};
+
+const downloadAnkiFile = (content: string, filename: string) => {
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
 const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
   const router = useRouter();
 
@@ -28,6 +44,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
   const confirm = useConfirm();
   const setModal = useCreateSet();
   const uploadModal = useCreateUpload();
+  const editModal = useCreateSet();
 
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
@@ -58,7 +75,13 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (flashcardModal.isOn || uploadModal.isOn) return;
+      if (
+        flashcardModal.isOn ||
+        uploadModal.isOn ||
+        editModal.isOn ||
+        setModal.isOn
+      )
+        return;
       else if (event.code === "Space") {
         event.preventDefault();
         flipRef.current?.();
@@ -76,7 +99,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [flashcardModal.isOn, uploadModal.isOn]);
+  }, [flashcardModal.isOn, uploadModal.isOn, editModal.isOn, setModal.isOn]);
 
   useEffect(() => {
     if (
@@ -152,21 +175,32 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
             <p className="text-2xl text-gray-500">No flashcards found</p>
           </div>
         )}
-        <button
-          className="text-lg text-font3 w-full bg-font3/20 rounded-lg p-2 hover:bg-font3/30 transition-all duration-100 my-2"
-          onClick={() => {
-            if (randomKey === 0) {
-              // First randomization
-              setRandomKey(1);
-            } else {
-              // Subsequent randomizations
-              setRandomKey((prev) => prev + 1);
-            }
-            forwardRef.current.resetArray();
-          }}
-        >
-          {randomKey === 0 ? "Randomize" : "Shuffle Again"}
-        </button>
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-2 gap-4">
+          <button
+            className="text-lg text-font3 w-full bg-font3/20 rounded-lg p-2 hover:bg-font3/30 transition-all duration-100 my-2"
+            onClick={() => {
+              if (randomKey === 0) {
+                // First randomization
+                setRandomKey(1);
+              } else {
+                // Subsequent randomizations
+                setRandomKey((prev) => prev + 1);
+              }
+              forwardRef.current.resetArray();
+            }}
+          >
+            {randomKey === 0 ? "Randomize" : "Shuffle Again"}
+          </button>
+          <button
+            className="text-lg text-font3 w-full bg-font3/20 rounded-lg p-2 hover:bg-font3/30 transition-all duration-100 my-2"
+            onClick={() => {
+              const formattedFlashcards = formatFlashcardsForAnki(flashcards);
+              downloadAnkiFile(formattedFlashcards, "flashcards.txt");
+            }}
+          >
+            Export to Anki
+          </button>
+        </div>
 
         {currentUser?._id === set?.creator?._id && (
           <div className="grid grid-cols-4 gap-4 w-full max-w-6xl">

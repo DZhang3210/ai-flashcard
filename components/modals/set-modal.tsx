@@ -147,18 +147,15 @@ const SetModal = () => {
         {setModal.editMode && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
-                onClick={() => setModal.setOff()}
-                className="h-full border border-black/20 aspect-square flex items-center justify-center rounded-lg bg-white hover:bg-black/5 transition-all duration-100"
-              >
+              <button className="h-full border border-black/20 aspect-square flex items-center justify-center rounded-lg bg-white hover:bg-black/5 transition-all duration-100">
                 <EllipsisVertical className="w-4 h-4" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end">
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <button
                   onClick={handleDelete}
-                  className="w-full"
+                  className="w-full right-0"
                   disabled={deletingSet}
                 >
                   Delete

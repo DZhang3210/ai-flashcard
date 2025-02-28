@@ -69,6 +69,12 @@ const schema = defineSchema({
   })
     .index("userId", ["userId"])
     .index("productId", ["productId"]),
+  prompts: defineTable({
+    userId: v.id("users"),
+    prompt: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("userId", ["userId"]),
 });
 
 export default schema;

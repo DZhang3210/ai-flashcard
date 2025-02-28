@@ -19,6 +19,7 @@ import type * as http from "../http.js";
 import type * as likes from "../likes.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
+import type * as prompts from "../prompts.js";
 import type * as set from "../set.js";
 import type * as subscription from "../subscription.js";
 import type * as upload from "../upload.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   likes: typeof likes;
   orders: typeof orders;
   products: typeof products;
+  prompts: typeof prompts;
   set: typeof set;
   subscription: typeof subscription;
   upload: typeof upload;

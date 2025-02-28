@@ -103,7 +103,7 @@ const HomePage = () => {
               flashcards.
             </p>
             <form onSubmit={() => {}} className="max-w-md">
-              <Link href="/login">
+              <Link href="/explore">
                 <InteractiveHoverButton className="px-6 py-3 bg-black text-white">
                   Get Started
                 </InteractiveHoverButton>

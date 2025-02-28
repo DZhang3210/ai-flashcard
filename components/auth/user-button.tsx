@@ -51,7 +51,10 @@ const UserButton = () => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80 bg-background1 text-black *:p-6">
+      <DropdownMenuContent
+        className="w-80 bg-background1 text-black *:p-6"
+        align="end"
+      >
         <DropdownMenuItem
           className="cursor-pointer text-lg flex items-center group "
           asChild

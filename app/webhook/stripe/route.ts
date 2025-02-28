@@ -11,9 +11,10 @@ export async function POST(req: NextRequest) {
   const body = await req.text();
   const signature = req.headers.get("Stripe-Signature") as string;
   let event: Stripe.Event;
+  // console.log("Stripe WEBHOOK SECRET", process.env.STRIPE_WEBHOOK_SECRET);
   try {
     event = stripe.webhooks.constructEvent(
-      await body,
+      body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
       extraTime: currentPeriodEnd,
     });
   }
-  return new NextResponse("Success", { status: 200 });
+  return new NextResponse(null, { status: 200 });
   // } catch (error) {
   //   console.error("Stripe webhook error:", error);
   //   return new NextResponse(

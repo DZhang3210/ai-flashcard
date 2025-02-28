@@ -1,14 +1,13 @@
 "use client";
 import { Id } from "@/convex/_generated/dataModel";
-import { useCreateFlashcard } from "@/features/flashcard/api/use-create-flashcard";
+// import { useCreateFlashcard } from "@/features/flashcard/api/use-create-flashcard";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
-import { useCreatePrompt } from "@/features/prompts/use-create-prompt";
-import { useCurrentUser } from "@/features/auth/api/use-current-user";
+import { useCreateFlashcard } from "@/features/flashcard/api/use-create-flashcard";
 
-interface PDFFileUploadProps {
+interface TextFileUploadProps {
   setId: Id<"sets"> | null;
   onClose: () => void;
 }
@@ -22,39 +21,24 @@ interface ParsedData {
   [key: string]: FlashcardItem;
 }
 
-const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [base64Content, setBase64Content] = useState<string>("");
+const TextFileUpload: React.FC<TextFileUploadProps> = ({ setId }) => {
+  const [textContent, setTextContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const { mutate: createFlashcard } = useCreateFlashcard();
   const [prompt, setPrompt] = useState("");
   const [parsedData, setParsedData] = useState<ParsedData | null>(null);
-  const { mutate: createPrompt } = useCreatePrompt();
-  const { data: userId } = useCurrentUser();
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
-      // Convert file to base64 when selected
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result?.toString().split(",")[1] || "";
-        setBase64Content(base64);
-      };
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (selectedFile && base64Content) {
+  const handleSubmit = async ({ setId }: { setId: Id<"sets"> }) => {
+    if (textContent) {
       setIsLoading(true);
       try {
         const payload = {
-          pdfBase64: base64Content,
+          textContent,
           question: process.env.NEXT_PUBLIC_AI_PROMPT + prompt,
         };
         console.log("payload", payload);
-        const response = await fetch("/api/fileUpload", {
+        // Simulate API call
+        const response = await fetch("/api/textUpload", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -62,14 +46,12 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
           body: JSON.stringify(payload),
         });
 
-        console.log("response", response);
+        // Simulate response
         const data = await response.json();
         const tempParsedData = JSON.parse(data.message) as ParsedData;
-        console.log("parsedData", tempParsedData);
         setParsedData(tempParsedData);
 
-        // if (!parsedData) return;
-        // Convert object to array of flashcard items
+        // Simulate flashcard creation
         await Promise.all(
           Object.values(tempParsedData).map((item) =>
             createFlashcard({
@@ -79,17 +61,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
             })
           )
         );
-
-        if (userId) {
-          await createPrompt({
-            prompt: prompt,
-            userId: userId?._id,
-          });
-        }
-
         toast.success("Flashcards created successfully");
-        // onClose();
-        // setResponse(data.message);
       } catch (error) {
         console.error("Error parsing or creating flashcards:", error);
       } finally {
@@ -100,30 +72,14 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 overflow-y-auto">
-      <Label className="text-font3 text-lg font-bold">PDF File</Label>
-
-      <label
-        className="relative cursor-pointer border-2 border-dashed border-gray-300 rounded-lg p-8 w-full max-w-md
-          hover:border-blue-500 hover:bg-blue-50 transition-colors"
-      >
-        <input
-          type="file"
-          onChange={handleFileChange}
-          className="hidden"
-          accept=".pdf"
-        />
-        <div className="text-center">
-          <p className="text-gray-600">
-            {selectedFile ? selectedFile.name : "Click or drag file to upload"}
-          </p>
-          {!selectedFile && (
-            <p className="text-sm text-gray-400 mt-2">Supported formats: PDF</p>
-          )}
-        </div>
-        {/* <p className="text-sm text-gray-400 mt-2">
-          {response ? response : "Click submit to get a response"}
-        </p> */}
-      </label>
+      <Label className="text-font3 text-lg font-bold">Text Content</Label>
+      <textarea
+        className="w-full max-w-md border-2  border-gray-300 rounded-lg p-4
+          hover:bg-blue-50 transition-colors h-40"
+        placeholder="Enter text content here..."
+        value={textContent}
+        onChange={(e) => setTextContent(e.target.value)}
+      />
       {isLoading ? (
         <div className="flex items-center justify-center gap-2 h-10 w-full max-w-md">
           <div className="flex gap-1">
@@ -131,7 +87,7 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
             <div className="w-2 h-2 rounded-full bg-font3 animate-[bounce_1s_infinite_200ms]" />
             <div className="w-2 h-2 rounded-full bg-font3 animate-[bounce_1s_infinite_300ms]" />
           </div>
-          <span className="text-font3">Processing PDF...</span>
+          <span className="text-font3">Processing Text...</span>
         </div>
       ) : (
         <>
@@ -147,14 +103,13 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
           />
         </>
       )}
-
       <div className="flex flex-row items-center justify-center gap-1 w-full">
         <button
           className="w-full bg-font3 text-background1 p-2 rounded-md hover:bg-font3/80 transition-all duration-100 grow"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit({ setId: setId as Id<"sets"> })}
           disabled={isLoading}
         >
-          {isLoading ? "Loading..." : "Submit File"}
+          {isLoading ? "Loading..." : "Submit Text"}
         </button>
       </div>
       {parsedData && (
@@ -175,24 +130,8 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
           ))}
         </div>
       )}
-
-      {/* <button
-        onClick={handleSubmit}
-        disabled={isLoading || !prompt}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg
-              transition-colors disabled:bg-gray-400"
-      >
-        {isLoading ? "Processing..." : "Submit"}
-      </button> */}
-
-      {/* {response && (
-        <div className="w-full max-w-md p-4 mt-4 border rounded-lg bg-gray-50">
-          <h3 className="font-semibold mb-2">Response:</h3>
-          <p className="whitespace-pre-wrap">{response}</p>
-        </div>
-      )} */}
     </div>
   );
 };
 
-export default PDFFileUpload;
+export default TextFileUpload;
