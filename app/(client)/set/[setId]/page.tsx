@@ -106,7 +106,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     if (flashcardModal.isOn) {
       flashcardModal.setOff();
     }
-  }, [flashcardModal]);
+  }, []);
 
   // if (!set && !isLoading) router.push("/user/current");
 

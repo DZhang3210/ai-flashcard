@@ -65,6 +65,7 @@ const schema = defineSchema({
     userId: v.id("users"),
     pricePaidInCents: v.number(),
     createdAt: v.number(),
+    receiptUrl: v.optional(v.string()),
   })
     .index("userId", ["userId"])
     .index("productId", ["productId"]),

@@ -5,16 +5,27 @@ import { fetchQuery } from "convex/nextjs";
 import { fetchMutation } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import Stripe from "stripe";
 // const resend = new Resend(process.env.RESEND_API_KEY as string);
 export async function POST(req: NextRequest) {
-  const event = stripe.webhooks.constructEvent(
-    await req.text(),
-    req.headers.get("stripe-signature") as string,
-    process.env.STRIPE_WEBHOOK_SECRET as string
-  );
-  console.log("Stripe webhook received");
+  const body = await req.text();
+  const signature = req.headers.get("Stripe-Signature") as string;
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      await body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET as string
+    );
+  } catch (err) {
+    return new NextResponse(
+      JSON.stringify({ error: (err as Error).message || "Unknown error" }),
+      { status: 400 }
+    );
+  }
 
   if (event.type === "charge.succeeded") {
+    console.log("Stripe webhook received");
     const charge = event.data.object;
     const receiptUrl = event.data.object.receipt_url;
 
@@ -26,6 +37,7 @@ export async function POST(req: NextRequest) {
     const product = await fetchQuery(api.products.getById, {
       id: productId as Id<"products">,
     });
+
     if (product == null || email == null) {
       return new NextResponse("Bad Request", { status: 400 });
     }
@@ -39,6 +51,7 @@ export async function POST(req: NextRequest) {
       productId: productId as Id<"products">,
       pricePaidInCents,
       userId: userId as Id<"users">,
+      receiptUrl: receiptUrl as string,
     });
 
     await fetchMutation(api.subscription.update, {
@@ -46,7 +59,16 @@ export async function POST(req: NextRequest) {
       receiptUrl: receiptUrl as string,
       extraTime: currentPeriodEnd,
     });
-    return new NextResponse("Success", { status: 200 });
   }
-  return new NextResponse();
+  return new NextResponse("Success", { status: 200 });
+  // } catch (error) {
+  //   console.error("Stripe webhook error:", error);
+  //   return new NextResponse(
+  //     JSON.stringify({ error: (error as Error).message || "Unknown error" }),
+  //     {
+  //       status: 500,
+  //       headers: { "Content-Type": "application/json" },
+  //     }
+  //   );
+  // }
 }

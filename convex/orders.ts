@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { auth } from "./auth";
 
 export const getAllByUserId = query({
   args: {
@@ -30,6 +29,7 @@ export const create = mutation({
     productId: v.id("products"),
     pricePaidInCents: v.number(),
     userId: v.id("users"),
+    receiptUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("orders", {
@@ -37,6 +37,7 @@ export const create = mutation({
       pricePaidInCents: args.pricePaidInCents,
       userId: args.userId,
       createdAt: Date.now(),
+      receiptUrl: args.receiptUrl,
     });
   },
 });
