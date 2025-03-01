@@ -25,15 +25,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (event.type === "charge.succeeded") {
+  if (event.type === "checkout.session.completed") {
     console.log("Stripe webhook received");
-    const charge = event.data.object;
-    const receiptUrl = event.data.object.receipt_url;
+    console.log(event);
+    const session = event.data.object;
+    const receiptUrl = session.url;
 
-    const productId = charge.metadata.productId;
-    const userId = charge.metadata.userId;
-    const email = charge.billing_details.email;
-    const pricePaidInCents = charge.amount;
+    const productId = session.metadata?.productId;
+    const userId = session.metadata?.userId;
+    const email = session.customer_email;
+    const pricePaidInCents = session.amount_total as number;
 
     const product = await fetchQuery(api.products.getById, {
       id: productId as Id<"products">,
@@ -50,14 +51,14 @@ export async function POST(req: NextRequest) {
 
     await fetchMutation(api.orders.create, {
       productId: productId as Id<"products">,
-      pricePaidInCents,
+      pricePaidInCents: pricePaidInCents as number,
       userId: userId as Id<"users">,
-      receiptUrl: receiptUrl as string,
+      receiptUrl: receiptUrl || "",
     });
 
     await fetchMutation(api.subscription.update, {
       userId: userId as Id<"users">,
-      receiptUrl: receiptUrl as string,
+      receiptUrl: receiptUrl || "",
       extraTime: currentPeriodEnd,
     });
   }

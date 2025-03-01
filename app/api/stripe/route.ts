@@ -39,6 +39,10 @@ export async function GET(request: Request) {
     //   return new NextResponse(JSON.stringify({ url: stripeSession.url }));
     // }
 
+    console.log("user._id");
+    console.log(user._id);
+    console.log("product._id");
+    console.log(product._id);
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: settingUrl,
       cancel_url: settingUrl,
@@ -66,6 +70,12 @@ export async function GET(request: Request) {
       metadata: {
         userId: user._id,
         productId: product._id,
+      },
+      subscription_data: {
+        metadata: {
+          userId: user._id,
+          productId: product._id,
+        },
       },
     });
     return new NextResponse(JSON.stringify({ url: stripeSession.url }));
