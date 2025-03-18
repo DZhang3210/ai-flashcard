@@ -17,7 +17,6 @@ export const current = query({
       .query("subscriptions")
       .filter((q) => q.eq(q.field("user"), res?._id))
       .first();
-    console.log(subscription);
     if (subscription?.expiresAt && subscription.expiresAt > Date.now()) {
       return { ...res, isSubscribed: true };
     } else {

@@ -1,4 +1,5 @@
-import { useMemo, useRef } from "react";
+"use client";
+import { useEffect, useMemo, useRef } from "react";
 import {
   SparklesIcon,
   LightBulbIcon,
@@ -11,8 +12,13 @@ import { FlashcardArray } from "react-quizlet-flashcard";
 import { paidPlans } from "@/lib/lists/paid-plans";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import Image from "next/image";
+import { useCurrentUser } from "@/features/auth/api/use-current-user";
+import { useRouter } from "next/navigation";
 
 const HomePage = () => {
+  const { data: user } = useCurrentUser();
+  const router = useRouter();
+
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
     nextCard: () => {},
@@ -84,6 +90,12 @@ const HomePage = () => {
         "Export flashcards in various formats like Anki, Quizlet, and more",
     },
   ];
+
+  useEffect(() => {
+    if (user) {
+      router.push("/explore");
+    }
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-white">

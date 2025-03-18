@@ -39,10 +39,6 @@ export async function GET(request: Request) {
     //   return new NextResponse(JSON.stringify({ url: stripeSession.url }));
     // }
 
-    console.log("user._id");
-    console.log(user._id);
-    console.log("product._id");
-    console.log(product._id);
     if (!user._id) {
       throw new Error("User ID is required");
     }

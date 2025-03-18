@@ -5,7 +5,6 @@ export async function POST(req) {
     apiKey: process.env.ANTHROPIC_API_KEY,
   });
 
-  console.log("req", req);
   const { pdfBase64, question } = await req.json();
 
   const msg = await anthropic.messages.create({

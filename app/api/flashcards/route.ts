@@ -21,23 +21,19 @@ export async function POST(req: Request) {
     }
     const body = await req.json();
     const { textUrl }: { textUrl: string } = body;
-    console.log("Text URL", textUrl);
 
     const assistant = await openai.beta.assistants.create(
       openaiModel as AssistantCreateParams
     );
-    console.log("Assistant created", assistant);
 
     // Fetch text content
     const textContent = await fetchTextFileContent(textUrl);
-    console.log("Text content fetched");
 
     // Create a file from the text content
     const file = await openai.files.create({
       file: new File([textContent], "text.txt", { type: "text/plain" }),
       purpose: "assistants",
     });
-    console.log("File created", file);
 
     const thread = await openai.beta.threads.create({
       messages: [

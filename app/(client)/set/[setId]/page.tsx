@@ -134,7 +134,6 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
   }, []);
 
   const handleUpload = () => {
-    console.log(currentUser?.isSubscribed);
     if (currentUser?.isSubscribed) {
       uploadModal.setOn(params.setId);
     } else {
@@ -156,12 +155,18 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
           flashcardModal.isOn ? "col-span-5" : "col-span-8"
         )}
       >
+        {flashcards.length == 0 && (
+          <div className="text-lg text-red-500 w-full max-w-6xl mx-auto text-center font-bold">
+            You seem to have no flashcards in this set.
+          </div>
+        )}
         <FlashcardHeader
           set={set as SetWithFlashcards}
           currentUser={currentUser as Doc<"users">}
           setModal={setModal}
           randomKey={randomKey}
         />
+
         {isLoading ? (
           <div className="flex w-full items-center justify-center h-full">
             <Loader2 className="w-10 h-10 animate-spin" />

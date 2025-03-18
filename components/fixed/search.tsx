@@ -22,10 +22,6 @@ const Search = () => {
     e.preventDefault();
     const trimmedQuery = searchQuery.trim();
     if (trimmedQuery) {
-      console.log(
-        "trimmedQuery",
-        `/explore/${encodeURIComponent(trimmedQuery)}`
-      );
       router.push(`/explore/${encodeURIComponent(trimmedQuery)}`);
       setSearchQuery("");
     }

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import UserButton from "../auth/user-button";
 import MobileSidebar from "./mobile-sidebar";
 import useCreateSet from "@/hooks/create-set-hook";
@@ -19,12 +18,19 @@ export default function Navbar() {
       createSet.setOn();
     }
   };
+  const handleHomeButton = () => {
+    if (user == null) {
+      router.push("/");
+    } else {
+      router.push("/explore");
+    }
+  };
   const createSet = useCreateSet();
   const { data: user } = useCurrentUser();
   return (
     <nav className="bg-background1 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10 border-b-2 border-gray-200">
       <div className="max-w-[1200px] mx-auto w-full flex items-center justify-between">
-        <Link href="/" className="hidden md:block">
+        <button onClick={handleHomeButton} className="hidden md:block">
           <div
             className={cn(
               "flex items-center space-x-1 border-2 border-font4 rounded-full px-6 py-2 hover:bg-font4 transition duration-300 text-font4 hover:text-white",
@@ -33,7 +39,7 @@ export default function Navbar() {
           >
             <h1 className="text-xl font-bold hidden md:block ">Recall IQ </h1>
           </div>
-        </Link>
+        </button>
         {/* <Link
           href="/explore"
           className={cn(
