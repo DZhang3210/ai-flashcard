@@ -64,7 +64,7 @@ const SetDrawer = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="w-full h-full border-2 border-green-500 p-5 flex flex-col gap-y-4"
+      className="w-full h-full border-2  p-5 flex flex-col gap-y-4"
     >
       <div className="text-3xl w-full text-font4">
         {setModal.editMode ? "Edit Card" : "New Card"}

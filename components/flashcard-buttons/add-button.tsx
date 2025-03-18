@@ -15,7 +15,9 @@ const FlashcardAddButton = ({
       back: "",
       setId: params.setId,
     });
-    flashcardModal.toggle();
+    if (!flashcardModal.isOpen && !flashcardModal.editMode) {
+      flashcardModal.toggle();
+    }
   };
   return (
     <button

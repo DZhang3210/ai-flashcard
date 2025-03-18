@@ -24,7 +24,9 @@ const FlashcardEditButton = ({
       id: currentFlashcard._id,
       setId: params.setId,
     });
-    flashcardModal.toggle();
+    if (!flashcardModal.isOpen && flashcardModal.editMode) {
+      flashcardModal.toggle();
+    }
   };
   return (
     <button

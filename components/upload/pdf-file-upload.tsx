@@ -34,67 +34,88 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
+      const file = event.target.files[0];
+      setSelectedFile(file);
+
       // Convert file to base64 when selected
       const reader = new FileReader();
       reader.onload = () => {
         const base64 = reader.result?.toString().split(",")[1] || "";
         setBase64Content(base64);
       };
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = async () => {
-    if (selectedFile && base64Content) {
-      setIsLoading(true);
-      try {
-        const payload = {
-          pdfBase64: base64Content,
-          question: process.env.NEXT_PUBLIC_AI_PROMPT + prompt,
-        };
-        console.log("payload", payload);
-        const response = await fetch("/api/fileUpload", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+    if (!selectedFile || !base64Content || !prompt) {
+      toast.error("Please select a file and enter a prompt");
+      return;
+    }
 
-        console.log("response", response);
-        const data = await response.json();
-        const tempParsedData = JSON.parse(data.message) as ParsedData;
-        console.log("parsedData", tempParsedData);
-        setParsedData(tempParsedData);
+    setIsLoading(true);
 
-        // if (!parsedData) return;
-        // Convert object to array of flashcard items
-        await Promise.all(
-          Object.values(tempParsedData).map((item) =>
-            createFlashcard({
-              front: item.question,
-              back: item.answer,
-              setId: setId as Id<"sets">,
-            })
-          )
-        );
+    try {
+      const payload = {
+        pdfBase64: base64Content,
+        question: process.env.NEXT_PUBLIC_AI_PROMPT + prompt,
+      };
 
-        if (userId) {
-          await createPrompt({
-            prompt: prompt,
-            userId: userId?._id,
-          });
-        }
+      const response = await fetch("/api/fileUpload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-        toast.success("Flashcards created successfully");
-        // onClose();
-        // setResponse(data.message);
-      } catch (error) {
-        console.error("Error parsing or creating flashcards:", error);
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to process PDF");
       }
+
+      const data = await response.json();
+
+      // Parse the response
+      let tempParsedData: ParsedData;
+      try {
+        tempParsedData = JSON.parse(data.message) as ParsedData;
+      } catch (error) {
+        console.error("Error parsing response:", error);
+        toast.error("Failed to parse AI response");
+        return;
+      }
+
+      setParsedData(tempParsedData);
+
+      // Create flashcards from the parsed data
+      await Promise.all(
+        Object.values(tempParsedData).map((item) =>
+          createFlashcard({
+            front: item.question,
+            back: item.answer,
+            setId: setId as Id<"sets">,
+          })
+        )
+      );
+
+      if (userId) {
+        await createPrompt({
+          prompt: prompt,
+          userId: userId?._id,
+        });
+      }
+
+      toast.success(
+        `Created ${Object.keys(tempParsedData).length} flashcards successfully`
+      );
+    } catch (error) {
+      console.error("Error processing file:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to process file"
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,16 +135,16 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
         />
         <div className="text-center">
           <p className="text-gray-600">
-            {selectedFile ? selectedFile.name : "Click or drag file to upload"}
+            {selectedFile
+              ? `${selectedFile.name} (${(selectedFile.size / 1024).toFixed(2)}KB)`
+              : "Click or drag file to upload"}
           </p>
           {!selectedFile && (
             <p className="text-sm text-gray-400 mt-2">Supported formats: PDF</p>
           )}
         </div>
-        {/* <p className="text-sm text-gray-400 mt-2">
-          {response ? response : "Click submit to get a response"}
-        </p> */}
       </label>
+
       {isLoading ? (
         <div className="flex items-center justify-center gap-2 h-10 w-full max-w-md">
           <div className="flex gap-1">
@@ -152,15 +173,16 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
         <button
           className="w-full bg-font3 text-background1 p-2 rounded-md hover:bg-font3/80 transition-all duration-100 grow"
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={isLoading || !selectedFile || !prompt}
         >
-          {isLoading ? "Loading..." : "Submit File"}
+          {isLoading ? "Processing..." : "Submit File"}
         </button>
       </div>
+
       {parsedData && (
         <div className="w-full flex flex-col gap-4">
           <h1 className="text-xl font-bold text-font2 text-center">
-            New Flashcards
+            New Flashcards ({Object.keys(parsedData).length})
           </h1>
           {Object.values(parsedData).map((item) => (
             <div
@@ -175,22 +197,6 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
           ))}
         </div>
       )}
-
-      {/* <button
-        onClick={handleSubmit}
-        disabled={isLoading || !prompt}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg
-              transition-colors disabled:bg-gray-400"
-      >
-        {isLoading ? "Processing..." : "Submit"}
-      </button> */}
-
-      {/* {response && (
-        <div className="w-full max-w-md p-4 mt-4 border rounded-lg bg-gray-50">
-          <h3 className="font-semibold mb-2">Response:</h3>
-          <p className="whitespace-pre-wrap">{response}</p>
-        </div>
-      )} */}
     </div>
   );
 };

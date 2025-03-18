@@ -215,7 +215,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
               params={params}
             />
             <button
-              className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+              className="bg-red-400 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
               onClick={() => {
                 confirm.setDeleting(true);
                 confirm.setId(flashcards?.[currentCard - 1]?._id);
@@ -225,7 +225,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
               Remove Card
             </button>
             <button
-              className="bg-gray-200 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
+              className="bg-yellow-400 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
               onClick={() => uploadModal.setOn(params.setId)}
             >
               Upload

@@ -29,7 +29,9 @@
     ".next/types/**/*.ts",
     "next.config.mjs",
     "tailwind.config.js",
-    "app/api/text-flashcards/route.js"
+    "app/api/text-flashcards/route.js",
+    "app/api/fileUpload/route.js",
+    "app/api/textUpload/route.js"
   ],
   "exclude": ["node_modules"]
 }
