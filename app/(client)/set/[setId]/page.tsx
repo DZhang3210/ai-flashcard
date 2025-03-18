@@ -20,6 +20,7 @@ import DisplayFlashcardsList from "@/components/flashcard-buttons/display-flashc
 import FlashcardHeader from "@/components/flashcard-buttons/flashcard-header";
 import { SetWithFlashcards } from "@/lib/types";
 import { processFlashcards } from "@/lib/process-flashcards";
+import useCreatePremium from "@/hooks/create-premium-hook";
 
 const formatFlashcardsForAnki = (
   flashcards: Array<{ front: string; back: string }>
@@ -45,6 +46,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
   const setModal = useCreateSet();
   const uploadModal = useCreateUpload();
   const editModal = useCreateSet();
+  const createPremiumModal = useCreatePremium();
 
   const flipRef = useRef<() => void>(() => {});
   const forwardRef = useRef({
@@ -131,6 +133,14 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
     }
   }, []);
 
+  const handleUpload = () => {
+    console.log(currentUser?.isSubscribed);
+    if (currentUser?.isSubscribed) {
+      uploadModal.setOn(params.setId);
+    } else {
+      createPremiumModal.setIsOn(true);
+    }
+  };
   // if (!set && !isLoading) router.push("/user/current");
 
   return (
@@ -226,7 +236,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
             </button>
             <button
               className="bg-yellow-400 rounded-lg w-full flex flex-col items-center p-4 hover:bg-gray-300 transition"
-              onClick={() => uploadModal.setOn(params.setId)}
+              onClick={handleUpload}
             >
               Upload
             </button>

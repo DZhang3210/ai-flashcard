@@ -16,6 +16,7 @@ const schema = defineSchema({
     numLiked: v.optional(v.number()),
     numLikedByOthers: v.optional(v.number()),
     ownedSets: v.optional(v.array(v.id("sets"))),
+    isSubscribed: v.optional(v.boolean()),
   }).index("email", ["email"]),
   sets: defineTable({
     name: v.string(),

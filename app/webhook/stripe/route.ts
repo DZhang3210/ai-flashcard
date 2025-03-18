@@ -1,12 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-// import { Resend } from "resend";
+import { Resend } from "resend";
 import { stripe } from "@/lib/stripe";
 import { fetchQuery } from "convex/nextjs";
 import { fetchMutation } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import Stripe from "stripe";
+import { SuccessEmail } from "@/emails/SuccessEmail";
+import { render } from "@react-email/render";
 // const resend = new Resend(process.env.RESEND_API_KEY as string);
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+async function sendSuccessEmail(
+  email: string,
+  productName: string,
+  amount: number,
+  receiptUrl?: string
+) {
+  try {
+    const emailHtml = render(
+      SuccessEmail({
+        productName,
+        amount,
+        receiptUrl,
+      })
+    );
+
+    await resend.emails.send({
+      from: "AI Flashcard <no-reply@techdavidzhang1.com>",
+      to: email,
+      subject: "Welcome to AI Flashcard Premium! 🎉",
+      html: await emailHtml,
+    });
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const signature = req.headers.get("Stripe-Signature") as string;
@@ -49,18 +80,26 @@ export async function POST(req: NextRequest) {
     //   orders: { create: { productId, pricePaidInCents } },
     // };
 
-    await fetchMutation(api.orders.create, {
-      productId: productId as Id<"products">,
-      pricePaidInCents: pricePaidInCents as number,
-      userId: userId as Id<"users">,
-      receiptUrl: receiptUrl || "",
-    });
-
-    await fetchMutation(api.subscription.update, {
-      userId: userId as Id<"users">,
-      receiptUrl: receiptUrl || "",
-      extraTime: currentPeriodEnd,
-    });
+    await Promise.all([
+      fetchMutation(api.orders.create, {
+        productId: productId as Id<"products">,
+        pricePaidInCents: pricePaidInCents,
+        userId: userId as Id<"users">,
+        receiptUrl: receiptUrl || "",
+      }),
+      fetchMutation(api.subscription.update, {
+        userId: userId as Id<"users">,
+        receiptUrl: receiptUrl || "",
+        extraTime: currentPeriodEnd,
+      }),
+      // Send success email with receipt URL
+      sendSuccessEmail(
+        email,
+        product.name,
+        pricePaidInCents,
+        receiptUrl || undefined
+      ),
+    ]);
   }
   return new NextResponse(null, { status: 200 });
   // } catch (error) {

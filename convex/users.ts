@@ -10,9 +10,19 @@ export const current = query({
 
     if (identity === null) return null;
 
-    return await ctx.db.get(
+    let res = await ctx.db.get(
       identity.tokenIdentifier.split("|")[1] as Id<"users">
     );
+    const subscription = await ctx.db
+      .query("subscriptions")
+      .filter((q) => q.eq(q.field("user"), res?._id))
+      .first();
+    console.log(subscription);
+    if (subscription?.expiresAt && subscription.expiresAt > Date.now()) {
+      return { ...res, isSubscribed: true };
+    } else {
+      return { ...res, isSubscribed: false };
+    }
   },
 });
 

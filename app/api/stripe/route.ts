@@ -43,18 +43,21 @@ export async function GET(request: Request) {
     console.log(user._id);
     console.log("product._id");
     console.log(product._id);
+    if (!user._id) {
+      throw new Error("User ID is required");
+    }
+
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: settingUrl,
       cancel_url: settingUrl,
       payment_method_types: ["card"],
       mode: "subscription",
       billing_address_collection: "auto",
-      customer_email: user.email,
+      customer_email: user.email ?? undefined,
       line_items: [
         {
           price_data: {
             currency: "USD",
-
             product_data: {
               name: "Recall-AI",
               description: "Unlimited AI Generations",
@@ -68,13 +71,13 @@ export async function GET(request: Request) {
         },
       ],
       metadata: {
-        userId: user._id,
-        productId: product._id,
+        userId: user._id.toString(),
+        productId: product._id.toString(),
       },
       subscription_data: {
         metadata: {
-          userId: user._id,
-          productId: product._id,
+          userId: user._id.toString(),
+          productId: product._id.toString(),
         },
       },
     });

@@ -10,6 +10,7 @@ import Link from "next/link";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import { paidPlans } from "@/lib/lists/paid-plans";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+import Image from "next/image";
 
 const HomePage = () => {
   const flipRef = useRef<() => void>(() => {});
@@ -152,13 +153,22 @@ const HomePage = () => {
                 Watch how our AI transforms your study material into effective
                 flashcards in seconds.
               </p>
-              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">
-                Try Demo
-              </button>
+              <Link href="/explore">
+                <InteractiveHoverButton className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">
+                  Try Demo
+                </InteractiveHoverButton>
+              </Link>
             </div>
             <div className="flex-1">
               <div className="bg-white p-6 rounded-xl shadow-lg">
-                <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-64" />
+                <Image
+                  src="/ai-flashcard.gif"
+                  alt="AI Flashcard"
+                  width={800}
+                  height={450}
+                  style={{ objectFit: "contain" }}
+                  className="rounded-xl"
+                />
               </div>
             </div>
           </div>

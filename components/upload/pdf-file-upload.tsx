@@ -99,10 +99,10 @@ const PDFFileUpload: React.FC<PDFFileUploadProps> = ({ setId }) => {
         )
       );
 
-      if (userId) {
+      if (userId?._id) {
         await createPrompt({
           prompt: prompt,
-          userId: userId?._id,
+          userId: userId._id,
         });
       }
 

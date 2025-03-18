@@ -85,18 +85,23 @@ const UserButton = () => {
           Log out
           <LogOut size={32} className="text-gray-800" />
         </DropdownMenuItem>
-        <DropdownMenuSeparator className="border-t-2 border-gray-200 mx-1" />
-        <DropdownMenuItem
-          className="cursor-pointer text-sm text-gray-400 flex items-center gap-1 hover:bg-gray-200 transition justify-between"
-          onClick={() => {
-            premium.setIsOn(true);
-          }}
-        >
-          <div className="flex items-center gap-1 justify-center w-full bg-gray-800 text-white px-2 py-1 rounded-md">
-            <p>Upgrade to Pro</p>
-            <ArrowRight size={16} className="text-gray-800" />
-          </div>
-        </DropdownMenuItem>
+
+        {!data.isSubscribed && (
+          <>
+            <DropdownMenuSeparator className="border-t-2 border-gray-200 mx-1" />
+            <DropdownMenuItem
+              className="cursor-pointer text-sm text-gray-400 flex items-center gap-1 hover:bg-gray-200 transition justify-between"
+              onClick={() => {
+                premium.setIsOn(true);
+              }}
+            >
+              <div className="flex items-center gap-1 justify-center w-full bg-gray-800 text-white px-2 py-1 rounded-md">
+                <p>Upgrade to Pro</p>
+                <ArrowRight size={16} className="text-gray-800" />
+              </div>
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
