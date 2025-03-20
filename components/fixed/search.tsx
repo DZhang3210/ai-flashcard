@@ -45,11 +45,11 @@ const Search = () => {
             <div className="text-sm font-bold text-gray-800 mb-2">
               Recommended Sets
             </div>
-            <div className="ml-1 grid grid-cols-3 gap-2">
+            <div className="ml-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               {sets.map((set) => (
                 <div
                   key={set._id}
-                  className="text-gray-700 flex items-center gap-2 rounded-lg p-2 hover:bg-gray-200 transition-all duration-200"
+                  className="text-gray-700 flex items-center gap-2 rounded-lg p-2 hover:bg-gray-200 transition-all duration-200 border-2 border-gray-200"
                 >
                   <button
                     onClick={() => handleLinkClick(`/set/${set._id}`)}

@@ -218,7 +218,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
         </div>
 
         {currentUser?._id === set?.creator?._id && (
-          <div className="grid grid-cols-4 gap-4 w-full max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-6xl">
             <FlashcardEditButton
               currentCard={currentCard}
               flashcards={flashcards}

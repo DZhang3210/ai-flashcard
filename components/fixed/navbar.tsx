@@ -28,7 +28,7 @@ export default function Navbar() {
   const createSet = useCreateSet();
   const { data: user } = useCurrentUser();
   return (
-    <nav className="bg-background1 h-[100px] flex items-center justify-between sticky top-0 z-50 px-10 border-b-2 border-gray-200">
+    <nav className="bg-background1 h-[100px] flex items-center justify-between sticky top-0 z-50 px-4 md:px-10 border-b-2 border-gray-200">
       <div className="max-w-[1200px] mx-auto w-full flex items-center justify-between">
         <button onClick={handleHomeButton} className="hidden md:block">
           <div
@@ -57,7 +57,7 @@ export default function Navbar() {
         <div className="flex items-center space-x-8">
           <button
             onClick={createSetAction}
-            className="text-font2 text-lg  px-6 py-1 border-2 border-font2 rounded-full hover:bg-font2 hover:text-white transition-all duration-300 relative"
+            className="text-font2 text-lg  px-6 py-1 border-2 border-font2 rounded-full hover:bg-font2 hover:text-white transition-all duration-300 relative hidden md:block"
           >
             Create Set <br />
             {user == null && (
@@ -66,7 +66,9 @@ export default function Navbar() {
               </span>
             )}
           </button>
-          <UserButton />
+          <div className="hidden md:block">
+            <UserButton />
+          </div>
         </div>
       </div>
     </nav>
