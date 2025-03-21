@@ -50,15 +50,15 @@ const MobileSidebar = () => {
       >
         <div className="flex flex-col justify-between h-full">
           <SheetTitle className="sr-only">mobile sidebar</SheetTitle>
-          <div className="left-0 bottom-0 w-full flex flex-col gap-2 items-start justify-start">
+          <div className="left-0 bottom-0 w-full flex flex-col gap-3 items-start justify-start">
             <Link href="/" className="inline-block" onClick={closeSheet}>
-              <div className="space-x-1 border-2 border-font4 rounded-full px-6 py-2 hover:bg-font4 transition duration-300 text-font4 hover:text-white">
-                <h1 className="text-base md:text-3xl font-bold">Recall IQ</h1>
+              <div className="space-x-1 hover:bg-font4 transition duration-300 text-font4 hover:text-white">
+                <h1 className="text-xl md:text-3xl font-bold">Recall IQ</h1>
               </div>
             </Link>
             <button
               onClick={createSetAction}
-              className="text-black text-base  rounded-full hover:bg-font2 hover:text-white transition-all duration-300 relative"
+              className="text-xs text-font2 border-2 border-font2  rounded-lg  px-3 py-1 hover:bg-font2 hover:text-white transition-all duration-300 relative text-start"
             >
               Create Set
             </button>
@@ -67,7 +67,7 @@ const MobileSidebar = () => {
             <div className="flex items-center gap-2">
               <UserButton />
               {user?.isSubscribed && (
-                <div className="text-sm text-gray-500">
+                <div className="text-xs text-gray-500">
                   Premium <br />
                   Member
                 </div>
@@ -80,7 +80,7 @@ const MobileSidebar = () => {
                 signOut();
               }}
             >
-              <LogOut size={32} className="text-red-700" />
+              <LogOut size={30} className="text-red-700" />
             </div>
             <div></div>
           </div>

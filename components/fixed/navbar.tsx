@@ -49,10 +49,11 @@ export default function Navbar() {
         >
           Explore
         </Link> */}
-        <Search />
         <div className="block md:hidden">
           <MobileSidebar />
         </div>
+        <Search />
+
         {/* Right side buttons */}
         <div className="flex items-center space-x-8">
           <button

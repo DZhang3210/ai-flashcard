@@ -258,7 +258,7 @@ const FlashcardPage = ({ params }: { params: { setId: Id<"sets"> } }) => {
       </div>
 
       {flashcardModal.isOn && (
-        <div className="col-span-3 w-full h-full" key={flashcardModal.id}>
+        <div className="col-span-3  w-full h-full" key={flashcardModal.id}>
           <SetDrawer />
         </div>
       )}
